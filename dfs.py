@@ -92,7 +92,8 @@ class world:
             children = self.successors(current_tile)
             for elem in children:
                 if elem not in path:
-                    stack.append(elem)
+                    if elem not in visited:
+                        stack.append(elem)
             
             current_tile = stack.pop()
             visited.append(current_tile)
@@ -118,6 +119,56 @@ class world:
         return (r, path)
 
 
+    def bfs(self, s0, t):
+        r = False
+        path = []
+        stack = []
+        visited = []
+
+        stack.append(s0)
+        path.append(s0)
+        visited.append(s0)
+
+        current_tile = s0
+
+        while stack:
+            children = self.successors(current_tile)
+            for elem in children:
+                if elem not in path:
+                    stack.append(elem)
+            
+            current_tile = stack.pop(0)
+            visited.append(current_tile)
+
+            if visited[len(visited) - 1] in visited:
+                path.append(current_tile)
+
+            else:
+                last_tile = path[len(path) - 1]
+                current_children = self.successors(current_tile)
+
+                if last_tile in current_children:
+                    path.append(current_tile)
+
+            self.display_path(path)
+            print(path)
+            print(stack)
+        
+            if t in path:
+                r = True
+                break
+            
+        return (r, path)
+
+
+    def dijkstra(self, s0, t):
+
+        return 0
+
+    def a_star(self, s0, t):
+
+        return 0
+
 
 # create a world
 w = world(20, 10, 0.2)
@@ -129,8 +180,13 @@ w.display()
 #print(w.successors(w.L + 1))
 
 path_found, path = w.dfs(21, 164)
+path_found_bfs, path_bfs = w.bfs(21, 164)
 
 if path_found:
     print("Goal reached.")
 else:
     print("No path found...")
+
+print("DFS path length = " + len(path))
+print("BFS path length = " + len(path_bfs))
+
