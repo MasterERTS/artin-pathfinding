@@ -6,6 +6,8 @@
 
 from random import random
 from sys import stdout
+import os
+import time
 
 class world:
     # initialise the world
@@ -47,6 +49,20 @@ class world:
 
             print('')
 
+    def display_path(self, path):
+        time.sleep(1)
+        os.system('clear')
+        for i in range(self.H):
+            for j in range(self.L):
+                if ( i * self.L + j ) in path:
+                    stdout.write('*')
+                elif self.w[i * self.L + j] == 0:
+                    stdout.write('.')
+                elif self.w[i * self.L + j] == 1:
+                    stdout.write('W')
+
+            print('')
+
     # compute the successors of tile number i in world w
     def successors(self, i):
         if i < 0 or i >= self.L * self.H or self.w[i] == 1:
@@ -60,12 +76,45 @@ class world:
     # starting from tile number s0, find a path to tile number t
     # return (r, path) where r is true if such a path exists, false otherwise
     # and path contains the path if it exists  
-    def dfs(s0, t):
+    def dfs(self, s0, t):
         r = False
         path = []
-        
-        # ... Complete here ...
+        stack = []
+        visited = []
 
+        stack.append(s0)
+        path.append(s0)
+        visited.append(s0)
+
+        current_tile = s0
+
+        while stack:
+            children = self.successors(current_tile)
+            for elem in children:
+                if elem not in path:
+                    stack.append(elem)
+        
+            current_tile = stack.pop()
+            visited.append(current_tile)
+
+            if visited[len(visited) - 1] in visited:
+                path.append(current_tile)
+
+            else:
+                last_tile = path[len(path) - 1]
+                current_children = self.successors(current_tile)
+
+                if last_tile in current_children:
+                    path.append(current_tile)
+
+            self.display_path(path)
+            print(path)
+            print(stack)
+        
+            if t in path:
+                r = True
+                break
+            
         return (r, path)
 
 
@@ -77,5 +126,9 @@ w = world(20, 10, 0.2)
 w.display()
 
 # print the tile numbers of the successors of the starting tile (1, 1)
-print(w.successors(w.L + 1))
+#print(w.successors(w.L + 1))
 
+path_found, path = w.dfs(21, 164)
+
+if path_found:
+    print("Goal reached.")
