@@ -93,7 +93,7 @@ class world:
             for elem in children:
                 if elem not in path:
                     stack.append(elem)
-        
+            
             current_tile = stack.pop()
             visited.append(current_tile)
 
@@ -132,3 +132,5 @@ path_found, path = w.dfs(21, 164)
 
 if path_found:
     print("Goal reached.")
+else:
+    print("No path found...")
