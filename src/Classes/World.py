@@ -3,6 +3,8 @@
 #
 # Author: Didier Lime
 # Date: 2018-10-03
+# Improved by: Erwin Lejeune, Morgane Talbot
+# Date: 2019-10-03
 
 from random import random
 from sys import stdout
@@ -37,6 +39,14 @@ class World:
                 # the starting tile nor the goal tile 
                 if random() < P and not (i == 1 and j == 1) and not (i == H-2 and j == L-2):
                     self.w[i*L+j] = 1
+
+    # return list of available tiles
+    def list_available_tiles(self):
+        available_tiles = []
+        for i in range(self.L*self.H):
+            if self.w[i] == 0:
+                available_tiles.append(i)
+        return(available_tiles)
 
     # display the world
     def display(self):
@@ -73,5 +83,13 @@ class World:
             return list(filter(lambda x: self.w[x] != 1, [i - 1, i + 1, i - self.L, i + self.L]))
 
 
+    def is_accessible(self, i, name):
+        children = self.successors(i)
+        if children:
+            return(True)
+        else:
+            print(name + " tile is not accessible !")
+            return(False)
 
+        
 
