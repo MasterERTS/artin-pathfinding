@@ -2,6 +2,7 @@ from Classes.World import World
 
 from collections import OrderedDict
 import time
+import os
 
 # Depth-first search
 # starting from tile number start, find a path to tile number target
@@ -9,7 +10,6 @@ import time
 # and path contains the path if it exists  
 
 def dfs(World, start, target, display):
-
     # Check accessibility of the begining and end of path
     start_check = World.is_accessible(start, "Start")
     target_check = World.is_accessible(target, "Target")
@@ -93,13 +93,43 @@ def bfs(World, start, target, display):
 
     return (reached, visited)
 
+def get_path(predecessor, start, target):
+    path = [target]
+    elem = target
+
+    while predecessor[elem] is not start:
+        elem = predecessor[elem]
+        path.append(elem)
+    if (len(path) > 1):
+        path.append(start)
+    return path
+
+
+def heuristic(World, current, target):
+    row_current = int(current / World.L)
+    col_current = current % World.H
+    row_target = int(target / World.L)
+    col_target = target % World.H
+    return(abs(row_current - row_target) + abs(col_current - col_target))
+
 def dijkstra(World, start, target, display):
+    # Check accessibility of the begining and end of path
+    start_check = World.is_accessible(start, "Start")
+    target_check = World.is_accessible(target, "Target")
+    if (not(start_check) or not(target_check)):
+        print("Start or Target are not accessible TILES.")
+        return(False, [])
+
     available_tiles = World.list_available_tiles()
-    predecessors = []
     queue = []
+    path = []
+
+    predecessor = dict()
     cost = dict()
+
     for elem in available_tiles:
         cost[elem] = 99999
+
     cost[start] = 0
     reached = False
     queue.append(start)
@@ -121,31 +151,22 @@ def dijkstra(World, start, target, display):
             for elem in children:
                 if cost[elem] > cost[current_tile] + 1:
                     cost[elem] = cost[current_tile] + 1 
-                    predecessors.append(current_tile)
+                    predecessor[elem] = current_tile
                     queue.append(elem)
 
-    if display:   
-        World.display_path(predecessors)
+    if reached:
+        path = get_path(predecessor, start, target)
 
-    return(reached, predecessors)
-
-def get_path(predecessor, start, target):
-    path = [target]
-    elem = target
-    while predecessor[elem] is not start:
-        elem = predecessor[elem]
-        path.append(elem)
-    return path
-
-
-def heuristic(World, current, target):
-    row_current = int(current / World.L)
-    col_current = current % World.H
-    row_target = int(target / World.L)
-    col_target = target % World.H
-    return(abs(row_current - row_target) + abs(col_current - col_target))
+    return(reached, path)
 
 def a_star(World, start, target, display):
+    # Check accessibility of the begining and end of path
+    start_check = World.is_accessible(start, "Start")
+    target_check = World.is_accessible(target, "Target")
+    if (not(start_check) or not(target_check)):
+        print("Start or Target are not accessible TILES.")
+        return(False, [])
+        
     available_tiles = World.list_available_tiles()
 
     reached = False
@@ -185,7 +206,8 @@ def a_star(World, start, target, display):
                     f_score[cell] = g_score[cell] + h_score[cell]
                     open_list.append(cell)
 
-    path = get_path(predecessor, start, target)
+    if reached:
+        path = get_path(predecessor, start, target)
 
     return(reached, path)
 
@@ -198,6 +220,8 @@ def path_info(path_found, path, algorithm):
 
 if __name__ == '__main__':
     # create a world
+    os.system('clear')
+
     w = World(20, 10, 0.2)
     display = False
 
@@ -205,7 +229,6 @@ if __name__ == '__main__':
     path_info(path_found, dijkstra, "DIJKSTRA")
 
     path_found, a_star = a_star(w, 21, 164, display)
-    w.display_path(a_star)
     path_info(path_found, a_star, "A*")
 
     path_found, dfs = dfs(w, 21, 164, display)
