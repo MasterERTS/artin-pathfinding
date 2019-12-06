@@ -119,8 +119,8 @@ def dijkstra(World, start, target, display):
         else:
             children = World.successors(current_tile)
             for elem in children:
-                if cost[current_tile] < cost[elem]:
-                    cost[elem] = cost[current_tile]
+                if cost[elem] > cost[current_tile] + 1:
+                    cost[elem] = cost[current_tile] + 1 
                     predecessors.append(current_tile)
                     queue.append(elem)
 
@@ -129,57 +129,90 @@ def dijkstra(World, start, target, display):
 
     return(reached, predecessors)
 
+def get_path(predecessor, start, target):
+    path = [target]
+    elem = target
+    while predecessor[elem] is not start:
+        elem = predecessor[elem]
+        path.append(elem)
+    return path
+
+
 def heuristic(World, current, target):
     row_current = int(current / World.L)
     col_current = current % World.H
     row_target = int(target / World.L)
     col_target = target % World.H
-    return abs(row_current - row_target) + abs(col_current - col_target)
+    return(abs(row_current - row_target) + abs(col_current - col_target))
 
 def a_star(World, start, target, display):
+    available_tiles = World.list_available_tiles()
+
     reached = False
     open_list = [start]
     closed_list = []
+    path = []
 
+    predecessor = dict()
     f_score = dict()
+    g_score = dict()
     h_score = dict()
 
-    while (reached == False)
-        
+    for elem in available_tiles:
+        f_score[elem] = 0
+        g_score[elem] = 0
+        h_score[elem] = 0
 
+    while (not(reached) and open_list):
+        current_tile = open_list.pop()
+        closed_list.append(current_tile)
+        if target in closed_list:
+            reached = True
+            break
+        children = World.successors(current_tile)
+        for cell in children:
+            if cell not in closed_list:
+                if cell in open_list:
+                    if g_score[cell] > g_score[current_tile] + 1:
+                        g_score[cell] = g_score[current_tile] + 1
+                        h_score[cell] = heuristic(World, current_tile, target)
+                        predecessor[cell] = current_tile
+                        f_score[cell] = g_score[cell] + h_score[cell]
+                else:
+                    g_score[cell] = g_score[current_tile] + 1
+                    h_score[cell] = heuristic(World, current_tile, target)
+                    predecessor[cell] = current_tile
+                    f_score[cell] = g_score[cell] + h_score[cell]
+                    open_list.append(cell)
 
+    path = get_path(predecessor, start, target)
 
-    if display:   
-        World.display_path(predecessors)
-
-    return(reached, predecessors)
+    return(reached, path)
 
 def path_info(path_found, path, algorithm):
     if path_found:
-        print("Goal reached.")
+        print("\nGoal reached.")
     else:
         print("No path found...")
-    print("With " + algorithm + " length of the shortest path is " + str(len(path)))
+    print("With " + algorithm + " length of the shortest path is " + str(len(path)) + "\n")
 
 if __name__ == '__main__':
-    matrix = World(20, 10, 0.2)
-    matrix.display()
-    test_tile = 20
-    print(matrix.w[test_tile])
-    print(str(test_tile % matrix.L))
-    print(str(test_tile % matrix.H))
     # create a world
-    """  w = World(20, 10, 0.2)
+    w = World(20, 10, 0.2)
     display = False
 
     path_found, dijkstra = dijkstra(w, 21, 164, display)
     path_info(path_found, dijkstra, "DIJKSTRA")
 
+    path_found, a_star = a_star(w, 21, 164, display)
+    w.display_path(a_star)
+    path_info(path_found, a_star, "A*")
+
     path_found, dfs = dfs(w, 21, 164, display)
     path_info(path_found, dfs, "DFS")
 
     path_found, bfs = bfs(w, 21, 164, display)
-    path_info(path_found, bfs, "BFS")"""
+    path_info(path_found, bfs, "BFS")
 
 
 
