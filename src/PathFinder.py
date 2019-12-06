@@ -129,14 +129,30 @@ def dijkstra(World, start, target, display):
 
     return(reached, predecessors)
 
-"""def heuristic(current, target):
-    World.w[current]
-    row = current % H
-    col = current % L
-    return abs(self.row - Node.target.row) + abs(self.column - Node.target.column)
-"""
-def a_star():
-    return 0
+def heuristic(World, current, target):
+    row_current = int(current / World.L)
+    col_current = current % World.H
+    row_target = int(target / World.L)
+    col_target = target % World.H
+    return abs(row_current - row_target) + abs(col_current - col_target)
+
+def a_star(World, start, target, display):
+    reached = False
+    open_list = [start]
+    closed_list = []
+
+    f_score = dict()
+    h_score = dict()
+
+    while (reached == False)
+        
+
+
+
+    if display:   
+        World.display_path(predecessors)
+
+    return(reached, predecessors)
 
 def path_info(path_found, path, algorithm):
     if path_found:
