@@ -225,17 +225,19 @@ if __name__ == '__main__':
     w = World(20, 10, 0.2)
     display = False
 
-    path_found, dijkstra = dijkstra(w, 21, 164, display)
-    path_info(path_found, dijkstra, "DIJKSTRA")
+    # path_found, dijkstra = dijkstra(w, 21, 164, display)
+    # path_info(path_found, dijkstra, "DIJKSTRA")
 
     path_found, a_star = a_star(w, 21, 164, display)
     path_info(path_found, a_star, "A*")
 
-    path_found, dfs = dfs(w, 21, 164, display)
-    path_info(path_found, dfs, "DFS")
+    w.display_path(a_star, 0)
 
-    path_found, bfs = bfs(w, 21, 164, display)
-    path_info(path_found, bfs, "BFS")
+    # path_found, dfs = dfs(w, 21, 164, display)
+    # path_info(path_found, dfs, "DFS")
+
+    # path_found, bfs = bfs(w, 21, 164, display)
+    # path_info(path_found, bfs, "BFS")
 
 
 

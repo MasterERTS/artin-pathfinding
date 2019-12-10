@@ -60,10 +60,10 @@ class World:
             print('')
 
     def display_path(self, path, rate):
-        time.sleep(rate)
         for i in range(self.H):
             for j in range(self.L):
                 if ( i * self.L + j ) in path:
+                    time.sleep(rate)
                     stdout.write('*')
                 elif self.w[i * self.L + j] == 0:
                     stdout.write('.')
