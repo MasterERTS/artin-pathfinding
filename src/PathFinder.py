@@ -137,8 +137,8 @@ def dijkstra(World, start, target, display):
     while queue and not(reached):
         # Extract smallest cost from queue    
         sorted_cost = OrderedDict(sorted(cost.items(), key = lambda x: x[1]))
-        for tile in queue:
-            if tile in sorted_cost.keys():
+        for tile in sorted_cost.keys():
+            if tile in queue:
                 current_tile = tile
                 queue.remove(tile)
         
@@ -185,27 +185,33 @@ def a_star(World, start, target, display):
         h_score[elem] = 0
 
     while (not(reached) and open_list):
-        current_tile = open_list.pop()
-        closed_list.append(current_tile)
+        sorted_f = OrderedDict(sorted(f_score.items(), key = lambda x: x[1]))
+        for tile in sorted_f.keys():
+            if tile in open_list:
+                current_tile = tile
+                open_list.remove(tile)
+                closed_list.append(current_tile)
+                break
+
         if target in closed_list:
             reached = True
             break
-        children = World.successors(current_tile)
-        for cell in children:
-            if cell not in closed_list:
-                if cell in open_list:
-                    if g_score[cell] > g_score[current_tile] + 1:
-                        g_score[cell] = g_score[current_tile] + 1
-                        h_score[cell] = heuristic(World, current_tile, target)
-                        predecessor[cell] = current_tile
-                        f_score[cell] = g_score[cell] + h_score[cell]
-                else:
-                    g_score[cell] = g_score[current_tile] + 1
-                    h_score[cell] = heuristic(World, current_tile, target)
-                    predecessor[cell] = current_tile
-                    f_score[cell] = g_score[cell] + h_score[cell]
-                    open_list.append(cell)
 
+        children = World.successors(current_tile)
+        for child_tile in children:
+            if child_tile not in closed_list:
+                if child_tile in open_list:
+                    new_g = g_score[current_tile] + 1
+                    if g_score[child_tile] > new_g:
+                        g_score[child_tile] = new_g
+                        predecessor[child_tile] = current_tile
+                else:
+                    g_score[child_tile] = g_score[current_tile] + 1
+                    h_score[child_tile] = heuristic(World, current_tile, target)
+                    predecessor[child_tile] = current_tile
+                    f_score[child_tile] = g_score[child_tile] + h_score[child_tile]
+                    open_list.append(child_tile)
+                    
     if reached:
         path = get_path(predecessor, start, target)
 
@@ -227,15 +233,17 @@ if __name__ == '__main__':
 
     path_found, dijkstra = dijkstra(w, 21, 164, display)
     path_info(path_found, dijkstra, "DIJKSTRA")
+    
+    # path_found, a_star = a_star(w, 21, 164, display)
+    # path_info(path_found, a_star, "A*")
 
-    path_found, a_star = a_star(w, 21, 164, display)
-    path_info(path_found, a_star, "A*")
+    w.display_path(dijkstra, 0)
 
-    path_found, dfs = dfs(w, 21, 164, display)
-    path_info(path_found, dfs, "DFS")
+    # path_found, dfs = dfs(w, 21, 164, display)
+    # path_info(path_found, dfs, "DFS")
 
-    path_found, bfs = bfs(w, 21, 164, display)
-    path_info(path_found, bfs, "BFS")
+    # path_found, bfs = bfs(w, 21, 164, display)
+    # path_info(path_found, bfs, "BFS")
 
 
 
