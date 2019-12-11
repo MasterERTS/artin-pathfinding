@@ -59,16 +59,19 @@ class World:
 
             print('')
 
-    def display_path(self, path, rate):
+    def display_path(self, path):
         for i in range(self.H):
             for j in range(self.L):
                 if ( i * self.L + j ) in path:
-                    time.sleep(rate)
-                    stdout.write('*')
+                    stdout.write("\033[0;32m")
+                    stdout.write('+')
+                    stdout.write("\033[0;0m")
                 elif self.w[i * self.L + j] == 0:
                     stdout.write('.')
                 elif self.w[i * self.L + j] == 1:
-                    stdout.write('W')
+                    stdout.write ("\033[;1m" + "\033[1;31m" )
+                    stdout.write('█')
+                    stdout.write("\033[0;0m")
 
             print('')
 

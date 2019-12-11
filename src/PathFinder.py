@@ -228,22 +228,31 @@ if __name__ == '__main__':
     # create a world
     os.system('clear')
 
-    w = World(20, 10, 0.2)
+    length = 40
+    height = 30
+    wall_percentage = 0.1
+    path_finding = input("Enter chosen path finding algorithm : ")
+
+    w = World(length, height, wall_percentage)
     display = False
 
-    path_found, dijkstra = dijkstra(w, 21, 164, display)
-    path_info(path_found, dijkstra, "DIJKSTRA")
+    if path_finding == "dijkstra":
+        path_found, path = dijkstra(w, length + 1, height*length - length - 4, display)
+        path_info(path_found, path, "DIJKSTRA")
     
-    # path_found, a_star = a_star(w, 21, 164, display)
-    # path_info(path_found, a_star, "A*")
+    elif path_finding == "astar":
+        path_found, path = a_star(w, length + 1, height*length - length - 4, display)
+        path_info(path_found, path, "A*")
 
-    w.display_path(dijkstra, 0)
+    elif path_finding == "dfs":
+        path_found, path = dfs(w, length + 1, height*length - length - 4, display)
+        path_info(path_found, path, "DFS")
 
-    # path_found, dfs = dfs(w, 21, 164, display)
-    # path_info(path_found, dfs, "DFS")
-
-    # path_found, bfs = bfs(w, 21, 164, display)
-    # path_info(path_found, bfs, "BFS")
+    elif path_finding == "bfs":
+        path_found, path = bfs(w, length + 1, height*length - length - 4, display)
+        path_info(path_found, path, "BFS")
+    
+    w.display_path(path)
 
 
 
