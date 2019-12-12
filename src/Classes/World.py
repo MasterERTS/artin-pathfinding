@@ -58,6 +58,28 @@ class World:
                     stdout.write('W')
 
             print('')
+    
+    def display_stepbystep(self, path, rate):
+        partial_path = []
+        for i in range(len(path)):
+            os.system('clear')
+            partial_path.append(path[i])
+            for i in range(self.H):
+                for j in range(self.L):
+                    if ( i * self.L + j ) in partial_path:
+                        stdout.write("\033[0;32m")
+                        stdout.write('¤')
+                        stdout.write("\033[0;0m")
+                    elif self.w[i * self.L + j] == 0:
+                        stdout.write('.')
+                    elif self.w[i * self.L + j] == 1:
+                        stdout.write ("\033[;1m" + "\033[1;31m" )
+                        stdout.write('█')
+                        stdout.write("\033[0;0m")
+
+                print('')
+            time.sleep(rate)
+            
 
     def display_path(self, path):
         for i in range(self.H):
