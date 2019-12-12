@@ -4,10 +4,10 @@ from collections import OrderedDict
 import time
 import os
 
-# Depth-first search
-# starting from tile number start, find a path to tile number target
-# return (reached, path) where reached is true if such a path exists, false otherwise
-# and path contains the path if it exists 
+#####################################################################################################################################################################
+#####################################################################################################################################################################
+
+#### Utility Functions ####
 
 def isAvailableTargetStart(World, start, target):
     start_check = World.is_accessible(start, "Start")
@@ -18,11 +18,43 @@ def isAvailableTargetStart(World, start, target):
     else:
         return(True)
 
+def heuristic(World, current, target):
+    # Manhattan distance but could use euclidian ?
+    row_current = int(current / World.L)
+    col_current = current % World.H
+    row_target = int(target / World.L)
+    col_target = target % World.H
+    return(abs(row_current - row_target) + abs(col_current - col_target))
+
+def get_path(predecessor, start, target):
+    path = [target]
+    elem = target
+
+    while predecessor[elem] is not start:
+        elem = predecessor[elem]
+        path.append(elem)
+    if (len(path) > 1):
+        path.append(start)
+    return path
+
+def path_info(path_found, path, algorithm):
+    if path_found:
+        print("\nGoal reached.")
+        print("With " + algorithm + " length of the shortest path is " + str(len(path)) + "\n")
+    else:
+        print("No path found...")
+
+#####################################################################################################################################################################
+#####################################################################################################################################################################
+
+#### Path Planning Algorithms ####
+
 def spanning_tree_walk(World, start, target):
     predecessors = dict()
     reached = False
     visited = []
     queue = [start]
+    path = []
 
     while(queue and not(reached)):
         current_tile = queue.pop()
@@ -38,10 +70,12 @@ def spanning_tree_walk(World, start, target):
 
     if reached:
         path = get_path(predecessors, start, target)
+        path.reverse()
 
     return(reached, path)
 
-def dfs(World, start, target, display):
+
+def dfs(World, start, target):
     # Check accessibility of the begining and end of path
     if(not(isAvailableTargetStart(World, start, target))):
         return([], False)
@@ -65,7 +99,8 @@ def dfs(World, start, target, display):
 
     return (reached, visited)
 
-def bfs(World, start, target, display):
+
+def bfs(World, start, target):
     # Check accessibility of the begining and end of path
     if(not(isAvailableTargetStart(World, start, target))):
         return([], False)
@@ -89,60 +124,7 @@ def bfs(World, start, target, display):
 
     return (reached, visited)
 
-
-def heuristic(World, current, target):
-    # Manhattan distance but could use euclidian ?
-    row_current = int(current / World.L)
-    col_current = current % World.H
-    row_target = int(target / World.L)
-    col_target = target % World.H
-    return(abs(row_current - row_target) + abs(col_current - col_target))
-
-def dijkstra(World, start, target, display):
-    # Check accessibility of the begining and end of path
-    if(not(isAvailableTargetStart(World, start, target))):
-        return([], False)
-
-    available_tiles = World.list_available_tiles()
-    queue = []
-    path = []
-
-    predecessor = dict()
-    cost = dict()
-
-    for elem in available_tiles:
-        cost[elem] = 9999
-
-    cost[start] = 0
-    reached = False
-    queue.append(start)
-
-    while queue and not(reached):
-        # Extract smallest cost from queue    
-        sorted_cost = OrderedDict(sorted(cost.items(), key = lambda x: x[1]))
-        for tile in sorted_cost.keys():
-            if tile in queue:
-                current_tile = tile
-                queue.remove(tile)
-        
-        # Did we reach the end ?
-        if current_tile == target:
-            reached = True
-            break
-        
-        children = World.successors(current_tile)
-        for elem in children:
-            if cost[elem] > cost[current_tile] + 1:
-                cost[elem] = cost[current_tile] + 1 
-                predecessor[elem] = current_tile
-                queue.append(elem)
-
-    if reached:
-        path = get_path(predecessor, start, target)
-
-    return(reached, path)
-
-def therealdijkstra(World, start, target, display):
+def therealdijkstra(World, start, target):
     # Check accessibility of the begining and end of path
     if(not(isAvailableTargetStart(World, start, target))):
         return([], False)
@@ -194,10 +176,11 @@ def therealdijkstra(World, start, target, display):
                     
     if reached:
         path = get_path(predecessor, start, target)
+        path.reverse()
 
     return(reached, path)
 
-def a_star(World, start, target, display):
+def a_star(World, start, target):
     # Check accessibility of the begining and end of path
     if(not(isAvailableTargetStart(World, start, target))):
         return([], False)
@@ -249,60 +232,72 @@ def a_star(World, start, target, display):
                     
     if reached:
         path = get_path(predecessor, start, target)
+        path.reverse()
 
     return(reached, path)
 
-def path_info(path_found, path, algorithm):
-    if path_found:
-        print("\nGoal reached.")
-        print("With " + algorithm + " length of the shortest path is " + str(len(path)) + "\n")
-    else:
-        print("No path found...")
+#####################################################################################################################################################################
+#####################################################################################################################################################################
+
+#### Main Script ####
 
 if __name__ == '__main__':
-    # create a world
-    os.system('clear')
 
+    # Create our World (Matrix of Availability)
     height = 20
     length = 50
     wall_percentage = 0.25
-    path_finding = input("Enter chosen path finding algorithm : [0: Dijkstra (A* h = 0); 1: Astar ; 2: DFS ; 3: BFS(to be fixed) ; Others: Compare Solutions]\n")
-
     w = World(length, height, wall_percentage)
-    display = False
+
+    # Display options
+    stepbystep_display = False
+    display_rate = 0.1
+
+    # Inputs
+    path_finding = input("Enter chosen path finding algorithm : \n ---------- \n0: Dijkstra (A* h = 0) ; \n1: Astar ; \n2: DFS ; \n3: BFS(to be fixed) ; \n4: Spanning Tree Walk ; \nOthers: Compare Solutions for all the algorithms\n")
+
 
     if path_finding == "0":
-        path_found, path = therealdijkstra(w, length + 1, height*length - length - 4, display)
+        path_found, path = therealdijkstra(w, length + 1, height*length - length - 4)
         path_info(path_found, path, "DIJKSTRA (H = 0)")
     
     elif path_finding == "1":
-        path_found, path = a_star(w, length + 1, height*length - length - 4, display)
+        path_found, path = a_star(w, length + 1, height*length - length - 4)
         path_info(path_found, path, "A*")
 
     elif path_finding == "2":
-        path_found, path = dfs(w, length + 1, height*length - length - 4, display)
+        path_found, path = dfs(w, length + 1, height*length - length - 4)
         path_info(path_found, path, "DFS")
 
     elif path_finding == "3":
-        path_found, path = bfs(w, length + 1, height*length - length - 4, display)
+        path_found, path = bfs(w, length + 1, height*length - length - 4)
         path_info(path_found, path, "BFS")
     
+    elif path_finding == "4":
+        path_found, path = spanning_tree_walk(w, length + 1, height*length - length - 4)
+        path_info(path_found, path, "Spanning Tree Walk")
+    
     else:
-        found_dfs, dfs = dfs(w, length + 1, height*length - length - 4, display)
-        found_dij, dij = therealdijkstra(w, length + 1, height*length - length - 4, display)
-        found_astar, astar = a_star(w, length + 1, height*length - length - 4, display)
-        found_bfs, bfs = bfs(w, length + 1, height*length - length - 4, display)
+        found_dfs, dfs = dfs(w, length + 1, height*length - length - 4)
+        found_dij, dij = therealdijkstra(w, length + 1, height*length - length - 4)
+        found_astar, astar = a_star(w, length + 1, height*length - length - 4)
+        found_bfs, bfs = bfs(w, length + 1, height*length - length - 4)
+        found_stw, stw = spanning_tree_walk(w, length + 1, height*length - length - 4)
 
         paths = dict()
         paths["A*"] = len(astar)
         paths["Dijkstra (H=0)"] = len(dij)
         paths["DFS"] = len(dfs)
         paths["BFS"] = len(bfs)
+        paths["STW"] = len(stw)
         print(paths)
     
-    if (path_finding == "0" or path_finding == "1" or path_finding == "2" or path_finding == "3"): 
+    if (path_finding == "0" or path_finding == "1" or path_finding == "2" or path_finding == "3" or path_finding == "4"): 
         if(path_found):
-            w.display_path(path)
+            if(stepbystep_display):
+                w.display_stepbystep(path, display_rate)
+            else:
+                w.display_path(path)
 
 
 
