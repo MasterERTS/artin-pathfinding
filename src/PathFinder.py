@@ -70,49 +70,24 @@ def bfs(World, start, target, display):
     if(not(isAvailableTargetStart(World, start, target))):
         return([], False)
 
-    # Depth First Search Algorithm
     reached = False
-    stack = []
-    visited = [start]
-    current_tile = start
+    queue = [start]
+    visited = []
 
-    # First iteration for queue not to be empty at first
-    iterations = 0
-    children = World.successors(current_tile)
-    for elem in children:
-        if elem not in visited:
-            stack.append(elem)
+    while(queue and not(reached)):
+        current_tile = queue.pop(0)
 
-    while (stack and not(reached)):
-        if (iterations != 0):
+        if current_tile not in visited:
+            visited.append(current_tile)
+            if target in visited:
+                reached = True
             children = World.successors(current_tile)
-            for elem in children:
-                if elem not in visited:
-                    stack.append(elem)
 
-        current_tile = stack.pop()
-        visited.append(current_tile)
-
-        if display:
-            World.display_path(visited)
-
-        iterations += 1
-        if target in visited:
-            reached = True
-            break
+            for child_tile in children:
+                if(child_tile not in visited):
+                    queue.append(child_tile)
 
     return (reached, visited)
-
-def get_path(predecessor, start, target):
-    path = [target]
-    elem = target
-
-    while predecessor[elem] is not start:
-        elem = predecessor[elem]
-        path.append(elem)
-    if (len(path) > 1):
-        path.append(start)
-    return path
 
 
 def heuristic(World, current, target):
