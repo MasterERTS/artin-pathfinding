@@ -46,37 +46,22 @@ def dfs(World, start, target, display):
     if(not(isAvailableTargetStart(World, start, target))):
         return([], False)
 
-    # Depth First Search Algorithm
     reached = False
-    queue = []
+    stack = [start]
     visited = []
-    visited.append(start)
-    current_tile = start
 
-    # First iteration for queue not to be empty at first
-    iterations = 0
-    children = World.successors(current_tile)
-    for elem in children:
-        if elem not in visited:
-            queue.append(elem)
+    while(stack and not(reached)):
+        current_tile = stack.pop()
 
-    while (queue and not(reached)):
-        if (iterations != 0):
+        if current_tile not in visited:
+            visited.append(current_tile)
+            if target in visited:
+                reached = True
             children = World.successors(current_tile)
-            for elem in children:
-                if elem not in visited:
-                    queue.append(elem)
 
-        current_tile = queue.pop()
-        visited.append(current_tile)
-
-        if display:
-            World.display_path(visited)
-
-        iterations += 1
-        if target in visited:
-            reached = True
-            break
+            for child_tile in children:
+                if(child_tile not in visited):
+                    stack.append(child_tile)
 
     return (reached, visited)
 
@@ -295,9 +280,9 @@ def a_star(World, start, target, display):
 def path_info(path_found, path, algorithm):
     if path_found:
         print("\nGoal reached.")
+        print("With " + algorithm + " length of the shortest path is " + str(len(path)) + "\n")
     else:
         print("No path found...")
-    print("With " + algorithm + " length of the shortest path is " + str(len(path)) + "\n")
 
 if __name__ == '__main__':
     # create a world
