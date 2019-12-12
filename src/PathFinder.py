@@ -326,7 +326,8 @@ if __name__ == '__main__':
         print(paths)
     
     if (path_finding == "0" or path_finding == "1" or path_finding == "2" or path_finding == "3"): 
-        w.display_path(path)
+        if(path_found):
+            w.display_path(path)
 
 
 
