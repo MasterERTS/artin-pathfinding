@@ -128,7 +128,7 @@ def dijkstra(World, start, target, display):
     cost = dict()
 
     for elem in available_tiles:
-        cost[elem] = 99999
+        cost[elem] = 9999
 
     cost[start] = 0
     reached = False
@@ -146,14 +146,72 @@ def dijkstra(World, start, target, display):
         if current_tile == target:
             reached = True
             break
-        else:
-            children = World.successors(current_tile)
-            for elem in children:
-                if cost[elem] > cost[current_tile] + 1:
-                    cost[elem] = cost[current_tile] + 1 
-                    predecessor[elem] = current_tile
-                    queue.append(elem)
+        
+        children = World.successors(current_tile)
+        for elem in children:
+            if cost[elem] > cost[current_tile] + 1:
+                cost[elem] = cost[current_tile] + 1 
+                predecessor[elem] = current_tile
+                queue.append(elem)
 
+    if reached:
+        path = get_path(predecessor, start, target)
+
+    return(reached, path)
+
+def therealdijkstra(World, start, target, display):
+    # Check accessibility of the begining and end of path
+    start_check = World.is_accessible(start, "Start")
+    target_check = World.is_accessible(target, "Target")
+    if (not(start_check) or not(target_check)):
+        print("Start or Target are not accessible TILES.")
+        return(False, [])
+        
+    available_tiles = World.list_available_tiles()
+
+    reached = False
+    open_list = [start]
+    closed_list = []
+    path = []
+
+    predecessor = dict()
+    f_score = dict()
+    g_score = dict()
+    h_score = dict()
+
+    for elem in available_tiles:
+        f_score[elem] = 0
+        g_score[elem] = 0
+        h_score[elem] = 0
+
+    while (not(reached) and open_list):
+        sorted_f = OrderedDict(sorted(f_score.items(), key = lambda x: x[1]))
+        for tile in sorted_f.keys():
+            if tile in open_list:
+                current_tile = tile
+                open_list.remove(tile)
+                closed_list.append(current_tile)
+                break
+
+        if target in closed_list:
+            reached = True
+            break
+
+        children = World.successors(current_tile)
+        for child_tile in children:
+            if child_tile not in closed_list:
+                if child_tile in open_list:
+                    new_g = g_score[current_tile] + 1
+                    if g_score[child_tile] > new_g:
+                        g_score[child_tile] = new_g
+                        predecessor[child_tile] = current_tile
+                else:
+                    g_score[child_tile] = g_score[current_tile] + 1
+                    h_score[child_tile] = 0
+                    predecessor[child_tile] = current_tile
+                    f_score[child_tile] = g_score[child_tile] + h_score[child_tile]
+                    open_list.append(child_tile)
+                    
     if reached:
         path = get_path(predecessor, start, target)
 
@@ -228,31 +286,45 @@ if __name__ == '__main__':
     # create a world
     os.system('clear')
 
-    length = 40
-    height = 30
-    wall_percentage = 0.1
-    path_finding = input("Enter chosen path finding algorithm : ")
+    height = 20
+    length = 50
+    wall_percentage = 0.25
+    path_finding = input("Enter chosen path finding algorithm : [0: Dijkstra (A* h = 0); 1: Astar ; 2: DFS ; 3: BFS(to be fixed) ; Others: Compare Solutions]\n")
 
     w = World(length, height, wall_percentage)
     display = False
 
-    if path_finding == "dijkstra":
-        path_found, path = dijkstra(w, length + 1, height*length - length - 4, display)
-        path_info(path_found, path, "DIJKSTRA")
+    if path_finding == "0":
+        path_found, path = therealdijkstra(w, length + 1, height*length - length - 4, display)
+        path_info(path_found, path, "DIJKSTRA (H = 0)")
     
-    elif path_finding == "astar":
+    elif path_finding == "1":
         path_found, path = a_star(w, length + 1, height*length - length - 4, display)
         path_info(path_found, path, "A*")
 
-    elif path_finding == "dfs":
+    elif path_finding == "2":
         path_found, path = dfs(w, length + 1, height*length - length - 4, display)
         path_info(path_found, path, "DFS")
 
-    elif path_finding == "bfs":
+    elif path_finding == "3":
         path_found, path = bfs(w, length + 1, height*length - length - 4, display)
         path_info(path_found, path, "BFS")
     
-    w.display_path(path)
+    else:
+        found_dfs, dfs = dfs(w, length + 1, height*length - length - 4, display)
+        found_dij, dij = therealdijkstra(w, length + 1, height*length - length - 4, display)
+        found_astar, astar = a_star(w, length + 1, height*length - length - 4, display)
+        found_bfs, bfs = bfs(w, length + 1, height*length - length - 4, display)
+
+        paths = dict()
+        paths["A*"] = len(astar)
+        paths["Dijkstra (H=0)"] = len(dij)
+        paths["DFS"] = len(dfs)
+        paths["BFS"] = len(bfs)
+        print(paths)
+    
+    if (path_finding == "0" or path_finding == "1" or path_finding == "2" or path_finding == "3"): 
+        w.display_path(path)
 
 
 
