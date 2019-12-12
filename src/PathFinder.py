@@ -7,24 +7,91 @@ import os
 # Depth-first search
 # starting from tile number start, find a path to tile number target
 # return (reached, path) where reached is true if such a path exists, false otherwise
-# and path contains the path if it exists  
+# and path contains the path if it exists 
 
-def dfs(World, start, target, display):
-    # Check accessibility of the begining and end of path
+def isAvailableTargetStart(World, start, target):
     start_check = World.is_accessible(start, "Start")
     target_check = World.is_accessible(target, "Target")
     if (not(start_check) or not(target_check)):
         print("Start or Target are not accessible TILES.")
-        return(False, [])
+        return(False)
+    else:
+        return(True)
+
+def spanning_tree_walk(World, start, target):
+    predecessors = dict()
+    reached = False
+    visited = []
+    queue = [start]
+
+    while(queue and not(reached)):
+        current_tile = queue.pop()
+        if current_tile == target:
+            reached = True
+        else:
+            visited.append(current_tile)
+            children = World.successors(current_tile)
+            for child_tile in children:
+                if ((child_tile not in visited) and (child_tile not in queue)):
+                    predecessors[child_tile] = current_tile
+                    queue.append(child_tile)
+
+    if reached:
+        path = get_path(predecessors, start, target)
+
+    return(reached, path)
+
+def dfs(World, start, target, display):
+    # Check accessibility of the begining and end of path
+    if(not(isAvailableTargetStart(World, start, target))):
+        return([], False)
 
     # Depth First Search Algorithm
     reached = False
-    stack = []
+    queue = []
     visited = []
     visited.append(start)
     current_tile = start
 
-    # First iteration for stack not to be empty at first
+    # First iteration for queue not to be empty at first
+    iterations = 0
+    children = World.successors(current_tile)
+    for elem in children:
+        if elem not in visited:
+            queue.append(elem)
+
+    while (queue and not(reached)):
+        if (iterations != 0):
+            children = World.successors(current_tile)
+            for elem in children:
+                if elem not in visited:
+                    queue.append(elem)
+
+        current_tile = queue.pop()
+        visited.append(current_tile)
+
+        if display:
+            World.display_path(visited)
+
+        iterations += 1
+        if target in visited:
+            reached = True
+            break
+
+    return (reached, visited)
+
+def bfs(World, start, target, display):
+    # Check accessibility of the begining and end of path
+    if(not(isAvailableTargetStart(World, start, target))):
+        return([], False)
+
+    # Depth First Search Algorithm
+    reached = False
+    stack = []
+    visited = [start]
+    current_tile = start
+
+    # First iteration for queue not to be empty at first
     iterations = 0
     children = World.successors(current_tile)
     for elem in children:
@@ -51,48 +118,6 @@ def dfs(World, start, target, display):
 
     return (reached, visited)
 
-def bfs(World, start, target, display):
-    # Check accessibility of the begining and end of path
-    start_check = World.is_accessible(start, "Start")
-    target_check = World.is_accessible(target, "Target")
-    if (not(start_check) or not(target_check)):
-        print("Start or Target are not accessible TILES.")
-        return(False, [])
-
-    # Depth First Search Algorithm
-    reached = False
-    queue = []
-    visited = []
-    visited.append(start)
-    current_tile = start
-
-    # First iteration for queue not to be empty at first
-    iterations = 0
-    children = World.successors(current_tile)
-    for elem in children:
-        if elem not in visited:
-            queue.append(elem)
-
-    while (queue and not(reached)):
-        if (iterations != 0):
-            children = World.successors(current_tile)
-            for elem in children:
-                if elem not in visited:
-                    queue.append(elem)
-
-        current_tile = queue.pop(0)
-        visited.append(current_tile)
-
-        if display:
-            World.display_path(visited)
-
-        iterations += 1
-        if target in visited:
-            reached = True
-            break
-
-    return (reached, visited)
-
 def get_path(predecessor, start, target):
     path = [target]
     elem = target
@@ -106,6 +131,7 @@ def get_path(predecessor, start, target):
 
 
 def heuristic(World, current, target):
+    # Manhattan distance but could use euclidian ?
     row_current = int(current / World.L)
     col_current = current % World.H
     row_target = int(target / World.L)
@@ -114,11 +140,8 @@ def heuristic(World, current, target):
 
 def dijkstra(World, start, target, display):
     # Check accessibility of the begining and end of path
-    start_check = World.is_accessible(start, "Start")
-    target_check = World.is_accessible(target, "Target")
-    if (not(start_check) or not(target_check)):
-        print("Start or Target are not accessible TILES.")
-        return(False, [])
+    if(not(isAvailableTargetStart(World, start, target))):
+        return([], False)
 
     available_tiles = World.list_available_tiles()
     queue = []
@@ -161,11 +184,8 @@ def dijkstra(World, start, target, display):
 
 def therealdijkstra(World, start, target, display):
     # Check accessibility of the begining and end of path
-    start_check = World.is_accessible(start, "Start")
-    target_check = World.is_accessible(target, "Target")
-    if (not(start_check) or not(target_check)):
-        print("Start or Target are not accessible TILES.")
-        return(False, [])
+    if(not(isAvailableTargetStart(World, start, target))):
+        return([], False)
         
     available_tiles = World.list_available_tiles()
 
@@ -219,11 +239,8 @@ def therealdijkstra(World, start, target, display):
 
 def a_star(World, start, target, display):
     # Check accessibility of the begining and end of path
-    start_check = World.is_accessible(start, "Start")
-    target_check = World.is_accessible(target, "Target")
-    if (not(start_check) or not(target_check)):
-        print("Start or Target are not accessible TILES.")
-        return(False, [])
+    if(not(isAvailableTargetStart(World, start, target))):
+        return([], False)
         
     available_tiles = World.list_available_tiles()
 
