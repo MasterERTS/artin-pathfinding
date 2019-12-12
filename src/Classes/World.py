@@ -64,7 +64,7 @@ class World:
             for j in range(self.L):
                 if ( i * self.L + j ) in path:
                     stdout.write("\033[0;32m")
-                    stdout.write('+')
+                    stdout.write('¤')
                     stdout.write("\033[0;0m")
                 elif self.w[i * self.L + j] == 0:
                     stdout.write('.')
