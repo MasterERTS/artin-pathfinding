@@ -18,13 +18,16 @@ def isAvailableTargetStart(World, start, target):
     else:
         return(True)
 
-def heuristic(World, current, target):
+def heuristic(World, current, target, complexH):
     # Manhattan distance but could use euclidian ?
     row_current = int(current / World.L)
     col_current = current % World.H
     row_target = int(target / World.L)
     col_target = target % World.H
-    return(abs(row_current - row_target) + abs(col_current - col_target))
+    if complexH:
+        return abs(row_current - row_target) + abs(col_current - col_target)
+    else:
+        return ((row_current - row_target)**2 + (col_current - col_target)**2)**0.5
 
 def get_path(predecessor, start, target):
     path = [target]
@@ -225,7 +228,7 @@ def a_star_alg(World, start, target):
                         predecessor[child_tile] = current_tile
                 else:
                     g_score[child_tile] = g_score[current_tile] + 1
-                    h_score[child_tile] = heuristic(World, current_tile, target)
+                    h_score[child_tile] = heuristic(World, current_tile, target, False)
                     predecessor[child_tile] = current_tile
                     f_score[child_tile] = g_score[child_tile] + h_score[child_tile]
                     open_list.append(child_tile)
@@ -248,6 +251,7 @@ def best_algorithm(height, length, wall_percentage, n_tests):
     dfs_paths = []
     bfs_paths = []
     stw_paths = []
+    valid_tests = 0
 
     # Display options
     for i in range(n_tests):
@@ -261,6 +265,7 @@ def best_algorithm(height, length, wall_percentage, n_tests):
 
         if found_astar:
             astar_paths.append(len(astar))
+            valid_tests += 1
         if found_dij:
             dij_paths.append(len(dij))
         if found_dfs:
@@ -270,11 +275,11 @@ def best_algorithm(height, length, wall_percentage, n_tests):
         if found_stw:
             stw_paths.append(len(stw))
 
-    average_astar = sum(astar_paths) / n_tests
-    average_dij = sum(dij_paths) / n_tests
-    average_dfs = sum(dfs_paths) / n_tests
-    average_bfs = sum(bfs_paths) / n_tests
-    average_stw = sum(stw_paths) / n_tests
+    average_astar = sum(astar_paths) / valid_tests
+    average_dij = sum(dij_paths) / valid_tests
+    average_dfs = sum(dfs_paths) / valid_tests
+    average_bfs = sum(bfs_paths) / valid_tests
+    average_stw = sum(stw_paths) / valid_tests
 
     length_dict = dict()
     length_dict["A*"] = average_astar
@@ -285,6 +290,7 @@ def best_algorithm(height, length, wall_percentage, n_tests):
 
     sorted_lengths = OrderedDict(sorted(length_dict.items(), key = lambda x: x[1]))
     print("Tests ran : " + str(n_tests) + "\n")
+    print("Valid tests : " + str(valid_tests) + "\n")
     print(sorted_lengths)
 
 
@@ -297,23 +303,33 @@ def pathfinding(height, length, wall_percentage, stepbystep_display, display_rat
 
 
     if path_finding == "0":
+        start_time = time.time()
         path_found, path = therealdijkstra_alg(w, length + 1, height*length - length - 4)
+        end_time = time.time()
         path_info(path_found, path, "DIJKSTRA (H = 0)")
     
     elif path_finding == "1":
+        start_time = time.time()
         path_found, path = a_star_alg(w, length + 1, height*length - length - 4)
+        end_time = time.time()
         path_info(path_found, path, "A*")
 
     elif path_finding == "2":
+        start_time = time.time()
         path_found, path = dfs_alg(w, length + 1, height*length - length - 4)
+        end_time = time.time()
         path_info(path_found, path, "DFS")
 
     elif path_finding == "3":
+        start_time = time.time()
         path_found, path = bfs_alg(w, length + 1, height*length - length - 4)
+        end_time = time.time()
         path_info(path_found, path, "BFS")
     
     elif path_finding == "4":
+        start_time = time.time()
         path_found, path = spanning_tree_walk_alg(w, length + 1, height*length - length - 4)
+        end_time = time.time()
         path_info(path_found, path, "Spanning Tree Walk")
     
     else:
@@ -340,6 +356,7 @@ def pathfinding(height, length, wall_percentage, stepbystep_display, display_rat
         if(path_found):
             if(stepbystep_display):
                 w.display_stepbystep(path, display_rate)
+                print("Process Time ---- %s ms " % (1000*(end_time - start_time)))
             else:
                 w.display_path(path)
 
@@ -355,14 +372,14 @@ if __name__ == '__main__':
     # Create our World (Matrix of Availability)
     height = 20
     length = 50
-    wall_percentage = 0
+    wall_percentage = 0.4
 
     # Display options
     stepbystep_display = True
     display_rate = 0.1
 
-    pathfinding(height, length, wall_percentage, stepbystep_display, display_rate)
-    #best_algorithm(height, length, wall_percentage, 20)
+    # pathfinding(height, length, wall_percentage, stepbystep_display, display_rate)
+    best_algorithm(height, length, wall_percentage, 200)
 
     
 
