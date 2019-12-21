@@ -104,7 +104,7 @@ class World:
             return [] 
         else:
             # look in the four adjacent tiles and keep only those with no wall
-            return list(filter(lambda x: self.w[x] != 1, [i - 1, i + 1, i - self.L, i + self.L]))
+            return list(filter(lambda x: self.w[x] != 1, [i - 1, i + 1, i - self.L, i + self.L, i - self.L - 1, i - self.L + 1, i + self.L - 1, i + self.L + 1]))
 
 
     def is_accessible(self, i, name):

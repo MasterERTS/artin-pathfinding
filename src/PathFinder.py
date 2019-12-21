@@ -49,7 +49,7 @@ def path_info(path_found, path, algorithm):
 
 #### Path Planning Algorithms ####
 
-def spanning_tree_walk(World, start, target):
+def spanning_tree_walk_alg(World, start, target):
     predecessors = dict()
     reached = False
     visited = []
@@ -75,7 +75,7 @@ def spanning_tree_walk(World, start, target):
     return(reached, path)
 
 
-def dfs(World, start, target):
+def dfs_alg(World, start, target):
     # Check accessibility of the begining and end of path
     if(not(isAvailableTargetStart(World, start, target))):
         return([], False)
@@ -100,7 +100,7 @@ def dfs(World, start, target):
     return (reached, visited)
 
 
-def bfs(World, start, target):
+def bfs_alg(World, start, target):
     # Check accessibility of the begining and end of path
     if(not(isAvailableTargetStart(World, start, target))):
         return([], False)
@@ -124,7 +124,7 @@ def bfs(World, start, target):
 
     return (reached, visited)
 
-def therealdijkstra(World, start, target):
+def therealdijkstra_alg(World, start, target):
     # Check accessibility of the begining and end of path
     if(not(isAvailableTargetStart(World, start, target))):
         return([], False)
@@ -180,7 +180,7 @@ def therealdijkstra(World, start, target):
 
     return(reached, path)
 
-def a_star(World, start, target):
+def a_star_alg(World, start, target):
     # Check accessibility of the begining and end of path
     if(not(isAvailableTargetStart(World, start, target))):
         return([], False)
@@ -239,57 +239,101 @@ def a_star(World, start, target):
 #####################################################################################################################################################################
 #####################################################################################################################################################################
 
-#### Main Script ####
+#### Tests ####
 
-if __name__ == '__main__':
-
-    # Create our World (Matrix of Availability)
-    height = 20
-    length = 50
-    wall_percentage = 0.25
-    w = World(length, height, wall_percentage)
+def best_algorithm(height, length, wall_percentage, n_tests):
+     # Create our World (Matrix of Availability)
+    astar_paths = []
+    dij_paths = []
+    dfs_paths = []
+    bfs_paths = []
+    stw_paths = []
 
     # Display options
-    stepbystep_display = False
-    display_rate = 0.1
+    for i in range(n_tests):
+        w = World(length, height, wall_percentage)
+
+        found_dfs, dfs = dfs_alg(w, length + 1, height*length - length - 4)
+        found_dij, dij = therealdijkstra_alg(w, length + 1, height*length - length - 4)
+        found_astar, astar = a_star_alg(w, length + 1, height*length - length - 4)
+        found_bfs, bfs = bfs_alg(w, length + 1, height*length - length - 4)
+        found_stw, stw = spanning_tree_walk_alg(w, length + 1, height*length - length - 4)
+
+        if found_astar:
+            astar_paths.append(len(astar))
+        if found_dij:
+            dij_paths.append(len(dij))
+        if found_dfs:
+            dfs_paths.append(len(dfs))
+        if found_bfs:
+            bfs_paths.append(len(bfs))
+        if found_stw:
+            stw_paths.append(len(stw))
+
+    average_astar = sum(astar_paths) / n_tests
+    average_dij = sum(dij_paths) / n_tests
+    average_dfs = sum(dfs_paths) / n_tests
+    average_bfs = sum(bfs_paths) / n_tests
+    average_stw = sum(stw_paths) / n_tests
+
+    length_dict = dict()
+    length_dict["A*"] = average_astar
+    length_dict["Dijkstra"] = average_dij
+    length_dict["BFS"] = average_bfs
+    length_dict["DFS"] = average_dfs
+    length_dict["STW"] = average_stw
+
+    sorted_lengths = OrderedDict(sorted(length_dict.items(), key = lambda x: x[1]))
+    print("Tests ran : " + str(n_tests) + "\n")
+    print(sorted_lengths)
+
+
+def pathfinding(height, length, wall_percentage, stepbystep_display, display_rate):
+    # Create our World (Matrix of Availability)
+    w = World(length, height, wall_percentage)
 
     # Inputs
     path_finding = input("Enter chosen path finding algorithm : \n ---------- \n0: Dijkstra (A* h = 0) ; \n1: Astar ; \n2: DFS ; \n3: BFS(to be fixed) ; \n4: Spanning Tree Walk ; \nOthers: Compare Solutions for all the algorithms\n")
 
 
     if path_finding == "0":
-        path_found, path = therealdijkstra(w, length + 1, height*length - length - 4)
+        path_found, path = therealdijkstra_alg(w, length + 1, height*length - length - 4)
         path_info(path_found, path, "DIJKSTRA (H = 0)")
     
     elif path_finding == "1":
-        path_found, path = a_star(w, length + 1, height*length - length - 4)
+        path_found, path = a_star_alg(w, length + 1, height*length - length - 4)
         path_info(path_found, path, "A*")
 
     elif path_finding == "2":
-        path_found, path = dfs(w, length + 1, height*length - length - 4)
+        path_found, path = dfs_alg(w, length + 1, height*length - length - 4)
         path_info(path_found, path, "DFS")
 
     elif path_finding == "3":
-        path_found, path = bfs(w, length + 1, height*length - length - 4)
+        path_found, path = bfs_alg(w, length + 1, height*length - length - 4)
         path_info(path_found, path, "BFS")
     
     elif path_finding == "4":
-        path_found, path = spanning_tree_walk(w, length + 1, height*length - length - 4)
+        path_found, path = spanning_tree_walk_alg(w, length + 1, height*length - length - 4)
         path_info(path_found, path, "Spanning Tree Walk")
     
     else:
-        found_dfs, dfs = dfs(w, length + 1, height*length - length - 4)
-        found_dij, dij = therealdijkstra(w, length + 1, height*length - length - 4)
-        found_astar, astar = a_star(w, length + 1, height*length - length - 4)
-        found_bfs, bfs = bfs(w, length + 1, height*length - length - 4)
-        found_stw, stw = spanning_tree_walk(w, length + 1, height*length - length - 4)
+        found_dfs, dfs = dfs_alg(w, length + 1, height*length - length - 4)
+        found_dij, dij = therealdijkstra_alg(w, length + 1, height*length - length - 4)
+        found_astar, astar = a_star_alg(w, length + 1, height*length - length - 4)
+        found_bfs, bfs = bfs_alg(w, length + 1, height*length - length - 4)
+        found_stw, stw = spanning_tree_walk_alg(w, length + 1, height*length - length - 4)
 
         paths = dict()
-        paths["A*"] = len(astar)
-        paths["Dijkstra (H=0)"] = len(dij)
-        paths["DFS"] = len(dfs)
-        paths["BFS"] = len(bfs)
-        paths["STW"] = len(stw)
+        if found_astar:
+            paths["A*"] = len(astar)
+        if found_dij:
+            paths["Dijkstra (H=0)"] = len(dij)
+        if found_dfs:
+            paths["DFS"] = len(dfs)
+        if found_bfs:
+            paths["BFS"] = len(bfs)
+        if found_stw:
+            paths["STW"] = len(stw)
         print(paths)
     
     if (path_finding == "0" or path_finding == "1" or path_finding == "2" or path_finding == "3" or path_finding == "4"): 
@@ -299,6 +343,28 @@ if __name__ == '__main__':
             else:
                 w.display_path(path)
 
+
+
+
+#####################################################################################################################################################################
+#####################################################################################################################################################################
+
+#### Main Script ####
+
+if __name__ == '__main__':
+    # Create our World (Matrix of Availability)
+    height = 20
+    length = 50
+    wall_percentage = 0
+
+    # Display options
+    stepbystep_display = True
+    display_rate = 0.1
+
+    pathfinding(height, length, wall_percentage, stepbystep_display, display_rate)
+    #best_algorithm(height, length, wall_percentage, 20)
+
+    
 
 
     
