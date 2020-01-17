@@ -228,7 +228,7 @@ def a_star_alg(World, start, target):
                         predecessor[child_tile] = current_tile
                 else:
                     g_score[child_tile] = g_score[current_tile] + 1
-                    h_score[child_tile] = heuristic(World, current_tile, target, False)
+                    h_score[child_tile] = heuristic(World, current_tile, target, True)
                     predecessor[child_tile] = current_tile
                     f_score[child_tile] = g_score[child_tile] + h_score[child_tile]
                     open_list.append(child_tile)
@@ -378,8 +378,8 @@ if __name__ == '__main__':
     stepbystep_display = True
     display_rate = 0.1
 
-    # pathfinding(height, length, wall_percentage, stepbystep_display, display_rate)
-    best_algorithm(height, length, wall_percentage, 200)
+    pathfinding(height, length, wall_percentage, stepbystep_display, display_rate)
+    # best_algorithm(height, length, wall_percentage, 200)
 
     
 
