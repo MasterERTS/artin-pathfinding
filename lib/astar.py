@@ -10,5 +10,7 @@ class AStar(object):
         self.env = World
         self.start = start
         self.target = target
+    
+    
 
         
