@@ -97,23 +97,5 @@ class World:
 
             print('')
 
-    # compute the successors of tile number i in world w
-    def successors(self, i):
-        if i < 0 or i >= self.L * self.H or self.w[i] == 1:
-            # i is an incorrect tile number (outside the array or on a wall)
-            return [] 
-        else:
-            # look in the four adjacent tiles and keep only those with no wall
-            return list(filter(lambda x: self.w[x] != 1, [i - 1, i + 1, i - self.L, i + self.L, i - self.L - 1, i - self.L + 1, i + self.L - 1, i + self.L + 1]))
-
-
-    def is_accessible(self, i, name):
-        children = self.successors(i)
-        if children:
-            return(True)
-        else:
-            print(name + " tile is not accessible !")
-            return(False)
-
         
 

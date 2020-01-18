@@ -1,13 +1,13 @@
 from world import World
 
-class PathFinding(object):
+class PathFinding():
     def __init__(self, World, start, target, path = None, predecessors = None):
         self.env = World
         self.start = start
         self.target = target
 
         if (predecessors == None):
-            self.predecessors = []
+            self.predecessors = dict()
         else:
             self.predecessors = predecessors
         
@@ -33,4 +33,3 @@ class PathFinding(object):
             self.path.append(elem)
         if (len(self.path) > 1):
             self.path.append(self.start)
-        return self.path
