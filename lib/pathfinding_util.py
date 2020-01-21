@@ -15,14 +15,7 @@ class PathFinding():
             self.path = []
         else:
             self.path = path
-
-    def getHeuristic(self, current_node):
-        # Manhattan distance but could use euclidian ?
-        row_current = int(current_node / self.env.L)
-        col_current = current_node % self.env.H
-        row_target = int(self.target / self.env.L)
-        col_target = self.target % self.env.H
-        return abs(row_current - row_target) + abs(col_current - col_target)
+            
 
     def reconstructPath(self):
         self.path = [self.target]
