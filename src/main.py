@@ -35,12 +35,12 @@ def main():
         pass
 
 if __name__ == "__main__":
-    env = World(10, 10, 0.1)
+    env = World(20, 20, .2)
     env.display()
     env.display_available_pos()
 
-    first = input("Start Node --->  ")
-    last = input("Target Node --->  ")
+    first = int(input("Start Node --->  "))
+    last = int(input("Target Node --->  "))
     pathfinder = AStar(first, last, False, env)
     pathfinder.shortest_path()
     pathfinder.path_info()
