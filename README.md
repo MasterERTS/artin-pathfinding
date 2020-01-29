@@ -1,4 +1,4 @@
-# Python Pathfinders
+# Various Pathfinders Implementations
 
 ## Done
 
