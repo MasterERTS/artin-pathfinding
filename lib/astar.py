@@ -5,8 +5,8 @@ from sys import stdout
 class AStar():
     
     def __init__(self, start, target, allow_diagonals, World):
-        self.start = Node(start, target, 0, None, World, allow_diagonals, True)
-        self.target = Node(target, target, -1, None, World, allow_diagonals, True)
+        self.start = Node(start, target, 0, None, World, True, allow_diagonals, True)
+        self.target = Node(target, target, -1, None, World, True, allow_diagonals, True)
 
         self.open_nodes = [self.start]
         self.closed_nodes = []
