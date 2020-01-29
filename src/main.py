@@ -16,8 +16,28 @@ from lib.world import World
 from lib.node import Node
 from lib.astar import AStar
 from lib.dfs import DepthFirstSearch
+from lib.bfs import BreadthFirstSearch
 from lib.pathfinder import *
 from lib.dijkstra import Dijkstra
+
+# --------------------------------------------- #
+
+def bfs():
+    env = World(40, 20, .2)
+    env.display()
+    env.display_available_pos()
+
+    first = int(input("Start Node --->  "))
+    last = int(input("Target Node --->  "))
+    pathfinder = BreadthFirstSearch(first, last, True, env)
+    pathfinder.shortest_path()
+    pathfinder.path_info()
+
+    env.display_path(pathfinder.path)
+
+    while(1):
+        pass
+
 
 def dijkstra():
     env = World(40, 20, .2)
@@ -88,4 +108,4 @@ def main():
         pass
 
 if __name__ == "__main__":
-    dfs()
+    bfs()

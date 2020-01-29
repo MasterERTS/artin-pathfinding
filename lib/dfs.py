@@ -2,8 +2,8 @@
 
 '''
 @author : Erwin Lejeune <erwin.lejeune15@gmail.com>
-@date : 28/01/2020
-@brief : astar implementation
+@date : 29/01/2020
+@brief : DFS implementation
 '''
 
 
@@ -41,8 +41,8 @@ class DepthFirstSearch():
                 self.visited.append(current_node)
                 if self.target == current_node:
                     self.reached = True
-                    # self.path = [elem.tile_pos for elem in self.visited]
-                    self.path = self.reconstruct_path(current_node)
+                    self.path = [elem.tile_pos for elem in self.visited]
+                    # self.path = self.reconstruct_path(current_node)
                     break
 
                 successors = current_node.successors()
