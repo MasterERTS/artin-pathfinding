@@ -98,6 +98,12 @@ class Node:
         # comparison method for sorting priority
         return self.f_cost < other.f_cost
 
+
+    def __eq__(self, other):
+        if (isinstance(other, Node)):
+            return self.tile_pos == other.tile_pos
+        return False
+
     
     def __str__(self):
         return 'Node{}'.format(self.tile_pos)
