@@ -1,21 +1,45 @@
+'''
+@author : Erwin Lejeune <erwin.lejeune15@gmail.com>
+@date : 28/01/2020
+@brief : Node class for pathfinding graphs in 2D matrix
+@todo : slightly move target or start node if not available
+'''
+
 from lib.world import World
 
 class Node:
-    def __init__(self, tile_pos, target, g_cost, parent, World, diagonals = None):
+    def __init__(self, tile_pos, target, g_cost, parent, World, diagonals = None, final_node = None):
         self.tile_pos = tile_pos
         self.g_cost = g_cost
         self.target = target
         self.diagonals = diagonals
+        self.final_node = final_node
         self.parent = parent
         self.world = World
         self.h_cost = self.calculate_heuristic()
         self.f_cost = self.g_cost + self.h_cost
+
+        if final_node == None:
+            if self.target == self.tile_pos:
+                self.final_node = True
+            else:
+                pass
+        else:
+            if final_node:
+                self.final_node = True
+            elif final_node == False:
+                self.final_node = False
 
         if diagonals == None:
             self.diagonals = False
         else:
             self.diagonals = diagonals
 
+
+    # should slightly correct node pos of start or target if they're not available
+    def correct_pos(self):
+        pass
+    
     
     def calculate_heuristic(self):
         row_current = int(self.tile_pos / self.world.L)
