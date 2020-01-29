@@ -61,9 +61,14 @@ class World:
         stdout.write("\033[0;0m")
         print("------------------------------")
         for elem in self.list_available_tiles():
-            if ( k > self.L ):
-                print('\n')
-                k = 0
+            if elem < 100:
+                if ( k > self.L ):
+                    print('\n')
+                    k = 0
+            if elem > 99:
+                if ( k > int(self.L * 0.83) ):
+                    print('\n')
+                    k = 0
             stdout.write(str(elem) + ' ')
             k += 1
         stdout.write("\033[0;32m")
@@ -95,6 +100,14 @@ class World:
 
     
     def display_stepbystep(self, path, rate):
+        print('')
+        carriage = 30 - self.L
+        spaces = ' ' * carriage
+        dashes = '-' * (carriage + int(self.L/2) - 1)
+        stdout.write ("\033[;1m")
+        stdout.write(dashes + "MAP" + dashes + "\n\n")
+        stdout.write("\033[0;0m")
+
         partial_path = []
         for i in range(len(path)):
             os.system('clear')
@@ -117,8 +130,19 @@ class World:
             
 
     def display_path(self, path):
+        print('')
+        carriage = 30 - self.L
+        spaces = ' ' * carriage
+        dashes = '-' * (carriage + int(self.L/2) - 2)
+        stdout.write ("\033[;1m")
+        stdout.write(dashes + "PATH" + dashes + "\n\n")
+        stdout.write("\033[0;0m")
+
         for i in range(self.H):
             for j in range(self.L):
+                if (j == 0):
+                    if carriage > 0:
+                        stdout.write(spaces)
                 if ( i * self.L + j ) in path:
                     stdout.write("\033[0;32m")
                     stdout.write('¤')
