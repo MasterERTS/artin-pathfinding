@@ -16,16 +16,16 @@ class AStar():
 
         self.path = []
 
-        if (not(self.start.is_accessible())):
+        while (not(self.start.is_accessible())):
             stdout.write ("\033[;1m" + "\033[1;31m" )
             stdout.write('START Tile have no children, choose another one ! ')
             stdout.write("\033[0;0m")
-            input("New START Tile --->  ")
-        if (not(self.target.is_accessible())):
+            self.start = input("New START Tile --->  ")
+        while (not(self.target.is_accessible())):
             stdout.write ("\033[;1m" + "\033[1;31m" )
             stdout.write('TARGET Tile have no children, choose another one ! ')
             stdout.write("\033[0;0m")
-            input("New TARGET Tile --->  ")
+            self.target = input("New TARGET Tile --->  ")
 
     def shortest_path(self):
         while self.open_nodes:
@@ -59,12 +59,19 @@ class AStar():
             stdout.write ("\033[;1m" + "\033[1;31m" )
             stdout.write('========================! NO PATH FOUND !=========================')
             stdout.write("\033[0;0m")
-            self.path = [self.start.tile_pos]
+            self.path = reconstruct_path(current_node)
 
 
 
-    def reconstruct_path(self):
-        pass
+    def reconstruct_path(self, node):
+        current_node = node
+        path = []
+        while (current_node != self.start):
+            path.append(current_node.tile_pos)
+            current_node = current_node.parent
+
+        path.reverse()
+        return(path)
 
 
     def path_info(self):
@@ -73,6 +80,6 @@ class AStar():
             print("Using A*, the shortest path between < TILE = " + 
                    str(self.start.tile_pos) + " > and < TILE = " + 
                    str(self.target.tile_pos) + " > is " + 
-                   str(len(self.path) + "\n")
+                   str(len(self.path) + "\n"))
         else:
             print("No path found...")
