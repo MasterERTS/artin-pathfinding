@@ -18,10 +18,7 @@ from lib.pathfinder import *
 
 def test_uniqueness():
     env = World(10, 10, 0.2)
-    free_tiles = []
-    for i in range(env.L*env.H):
-        if env.is_accessible(i):
-            free_tiles.append(i)
+    free_tiles = env.list_available_tiles()
     nodes = [Node(i, 84, 0, None, env) for i in free_tiles]
 
     # list of positions
@@ -37,10 +34,7 @@ def test_uniqueness():
 
 def test_outofbounds():
     env = World(10, 10, 0.2)
-    free_tiles = []
-    for i in range(env.L*env.H):
-        if env.is_accessible(i):
-            free_tiles.append(i)
+    free_tiles = env.list_available_tiles()
     new_node = [Node(i, 84, 0, None, env) for i in free_tiles]
 
     for elem in new_node:
@@ -48,10 +42,8 @@ def test_outofbounds():
 
 def test_availability():
     env = World(10, 10, 0.2)
-    free_tiles = []
-    for i in range(env.L*env.H):
-        if env.is_accessible(i):
-            free_tiles.append(i)
+    free_tiles = env.list_available_tiles()
+
     new_node = [Node(i, 84, 0, None, env) for i in free_tiles]
 
     for elem in new_node:
