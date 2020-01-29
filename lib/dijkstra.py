@@ -100,7 +100,7 @@ class Dijkstra():
         if self.reached:
             print("\nGoal reached.")
 
-            stdout.write("Using A*, the shortest path between < TILE = " + 
+            stdout.write("Using DIJKSTRA, the shortest path between < TILE = " + 
                    str(self.start.tile_pos) + " > and < TILE = " + 
                    str(self.target.tile_pos) + " > is ")   
             stdout.write ("\033[1;31m")
