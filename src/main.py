@@ -14,6 +14,7 @@ sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
 
 from lib.world import World
 from lib.node import Node
+from lib.astar import AStar
 from lib.pathfinder import *
 
 def main():
@@ -37,3 +38,15 @@ if __name__ == "__main__":
     env = World(10, 10, 0.1)
     env.display()
     env.display_available_pos()
+
+    first = input("Start Node --->  ")
+    last = input("Target Node --->  ")
+    pathfinder = AStar(first, last, False, env)
+    pathfinder.shortest_path()
+    pathfinder.path_info()
+
+    env.display_path(pathfinder.path)
+
+    while(1):
+        pass
+
