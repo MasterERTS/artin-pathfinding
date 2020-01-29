@@ -16,6 +16,7 @@ from lib.world import World
 from lib.node import Node
 from lib.astar import AStar
 from lib.pathfinder import *
+from lib.dijkstra import Dijkstra
 
 def main():
     args = dict([arg.split('=') for arg in sys.argv[1:]])
@@ -35,13 +36,13 @@ def main():
         pass
 
 if __name__ == "__main__":
-    env = World(20, 20, .2)
+    env = World(40, 20, .2)
     env.display()
     env.display_available_pos()
 
     first = int(input("Start Node --->  "))
     last = int(input("Target Node --->  "))
-    pathfinder = AStar(first, last, False, env)
+    pathfinder = Dijkstra(first, last, False, env)
     pathfinder.shortest_path()
     pathfinder.path_info()
 
