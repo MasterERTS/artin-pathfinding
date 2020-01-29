@@ -40,7 +40,7 @@ class Node:
     def correct_pos(self):
         pass
     
-    
+
     def calculate_heuristic(self):
         row_current = int(self.tile_pos / self.world.L)
         col_current = self.tile_pos % self.world.H
@@ -69,7 +69,8 @@ class Node:
                                                                       i - self.world.L + 1, 
                                                                       i + self.world.L - 1, 
                                                                       i + self.world.L + 1]))
-            return successors
+            children_nodes = [Node(elem, self.target, self.g_cost + 1, self, self.world, self.diagonals, self.final_node) for elem in successors]
+            return children_nodes
 
         else:
             # look in the four adjacent tiles and keep only those with no wall
@@ -77,7 +78,8 @@ class Node:
                                                                       i + 1, 
                                                                       i - self.world.L, 
                                                                       i + self.world.L]))
-            return successors
+            children_nodes = [Node(elem, self.target, self.g_cost + 1, self, self.world, self.diagonals, self.final_node) for elem in successors]
+            return children_nodes
             
 
     def is_accessible(self, name = None):
