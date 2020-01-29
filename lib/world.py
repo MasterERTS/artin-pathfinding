@@ -1,10 +1,13 @@
-# Example of world building, display, and successor computation for the artificial 
-# intelligence path-finding lab
-#
-# Author: Didier Lime
-# Date: 2018-10-03
-# Improved by: Erwin Lejeune, Morgane Talbot
-# Date: 2019-10-03
+# -*- coding: utf-8 -*-
+
+'''
+@author: Didier Lime
+@date: 2018-10-03
+------------------------------
+@improved by: Erwin Lejeune
+@date: 2019-10-03
+@brief : 2D Map building Class
+'''
 
 from random import random
 from sys import stdout

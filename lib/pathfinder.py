@@ -1,5 +1,6 @@
-from Classes.World import World
+# -*- coding: utf-8 -*-
 
+from lib.world import World
 from collections import OrderedDict
 import time
 import os
