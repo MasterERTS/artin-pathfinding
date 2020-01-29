@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+
+'''
+@author : Erwin Lejeune <erwin.lejeune15@gmail.com>
+@date : 28/01/2020
+@brief : astar implementation
+'''
+
+
 from lib.world import World
 from lib.node import Node
 from sys import stdout
