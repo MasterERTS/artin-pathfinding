@@ -43,6 +43,7 @@ class World:
                 if random() < P and not (i == 1 and j == 1) and not (i == H-2 and j == L-2):
                     self.w[i*L+j] = 1
 
+
     # return list of available tiles
     def list_available_tiles(self):
         available_tiles = []
@@ -51,16 +52,47 @@ class World:
                 available_tiles.append(i)
         return(available_tiles)
 
+
+    def display_available_pos(self):
+        print('\n\n')
+        k = 0
+        stdout.write ("\033[;1m")
+        print("List of Available positions : ")
+        stdout.write("\033[0;0m")
+        print("------------------------------")
+        for elem in self.list_available_tiles():
+            if ( k > self.L ):
+                print('\n')
+                k = 0
+            stdout.write(str(elem) + ' ')
+            k += 1
+        stdout.write("\033[0;32m")
+        print("\n\n/!\ Pick available tiles for starting and target positions.\n")
+        stdout.write("\033[0;0m")
+
     # display the world
     def display(self):
+        print('')
+        carriage = 30 - self.L
+        spaces = ' ' * carriage
+        dashes = '-' * (carriage + int(self.L/2) - 1)
+        stdout.write ("\033[;1m")
+        stdout.write(dashes + "MAP" + dashes + "\n\n")
+        stdout.write("\033[0;0m")
         for i in range(self.H):
             for j in range(self.L):
+                if (j == 0):
+                    if carriage > 0:
+                        stdout.write(spaces)
                 if self.w[i * self.L + j] == 0:
                     stdout.write('.')
                 elif self.w[i * self.L + j] == 1:
-                    stdout.write('W')
+                    stdout.write ("\033[;1m" + "\033[1;31m" )
+                    stdout.write('█')
+                    stdout.write("\033[0;0m")
 
             print('')
+
     
     def display_stepbystep(self, path, rate):
         partial_path = []
