@@ -13,6 +13,7 @@ from os import path
 sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
 
 from lib.world import World
+from lib.node import Node
 from lib.pathfinder import *
 
 def main():
