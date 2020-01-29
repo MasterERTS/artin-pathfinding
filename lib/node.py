@@ -8,7 +8,7 @@
 from lib.world import World
 
 class Node:
-    def __init__(self, tile_pos, target, g_cost, parent, World, diagonals = None, final_node = None):
+    def __init__(self, tile_pos, target, g_cost, parent, World, is_astar = None, diagonals = None, final_node = None):
         self.tile_pos = tile_pos
         self.g_cost = g_cost
         self.target = target
@@ -16,7 +16,17 @@ class Node:
         self.final_node = final_node
         self.parent = parent
         self.world = World
-        self.h_cost = self.calculate_heuristic()
+
+        if (is_astar == None):
+            self.is_astar = False
+            self.h_cost = 0
+        else:
+            self.is_astar = is_astar
+            if is_astar:
+                self.h_cost = self.calculate_heuristic()
+            else:
+                self.h_cost = 0
+
         self.f_cost = self.g_cost + self.h_cost
 
         if final_node == None:
@@ -69,7 +79,7 @@ class Node:
                                                                       i - self.world.L + 1, 
                                                                       i + self.world.L - 1, 
                                                                       i + self.world.L + 1]))
-            children_nodes = [Node(elem, self.target, self.g_cost + 1, self, self.world, self.diagonals, self.final_node) for elem in successors]
+            children_nodes = [Node(elem, self.target, self.g_cost + 1, self, self.world, self.is_astar, self.diagonals, self.final_node) for elem in successors]
             return children_nodes
 
         else:
@@ -78,7 +88,7 @@ class Node:
                                                                       i + 1, 
                                                                       i - self.world.L, 
                                                                       i + self.world.L]))
-            children_nodes = [Node(elem, self.target, self.g_cost + 1, self, self.world, self.diagonals, self.final_node) for elem in successors]
+            children_nodes = [Node(elem, self.target, self.g_cost + 1, self, self.world, self.is_astar, self.diagonals, self.final_node) for elem in successors]
             return children_nodes
             
 
