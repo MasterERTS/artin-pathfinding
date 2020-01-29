@@ -34,4 +34,6 @@ def main():
         pass
 
 if __name__ == "__main__":
-    main()
+    env = World(10, 10, 0.1)
+    env.display()
+    env.display_available_pos()
