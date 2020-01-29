@@ -56,6 +56,18 @@ class Node:
             return successors
             
 
+    def is_accessible(self, name = None):
+        children = self.successors()
+        if children:
+            return(True)
+        else:
+            if name != None:
+                print(name + " tile is not accessible !")
+            else:
+                raise("A visited tile is not ACCESSIBLE.")
+            return(False)
+
+
     def __lt__(self, other):
         # comparison method for sorting priority
         return self.f_cost < other.f_cost

@@ -99,16 +99,6 @@ class World:
                     stdout.write("\033[0;0m")
 
             print('')
-            
-
-    def is_accessible(self, i, name = None):
-        children = self.successors(i)
-        if children:
-            return(True)
-        else:
-            if name != None:
-                print(name + " tile is not accessible !")
-            return(False)
 
         
 
