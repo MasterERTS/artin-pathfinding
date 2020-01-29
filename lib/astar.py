@@ -5,11 +5,13 @@ from sys import stdout
 class AStar():
     
     def __init__(self, start, target, allow_diagonals, World):
-        self.start = Node(start, target, -1, None, World, allow_diagonals, True)
-        self.target = Node(target, target, 0, None, World, allow_diagonals, True)
+        self.start = Node(start, target, 0, None, World, allow_diagonals, True)
+        self.target = Node(target, target, -1, None, World, allow_diagonals, True)
 
         self.open_nodes = [self.start]
         self.closed_nodes = []
+
+        self.last_node = None
 
         self.reached = False
         self.available_tiles = World.list_available_tiles()
@@ -34,7 +36,9 @@ class AStar():
 
             if current_node == self.target:
                 self.reached = True
-                self.path = reconstruct_path(current_node)
+                self.last_node = current_node
+                self.path = self.reconstruct_path(current_node)
+                break
 
             else:
                 self.closed_nodes.append(self.open_nodes.pop(0))
@@ -59,7 +63,7 @@ class AStar():
             stdout.write ("\033[;1m" + "\033[1;31m" )
             stdout.write('========================! NO PATH FOUND !=========================')
             stdout.write("\033[0;0m")
-            self.path = reconstruct_path(current_node)
+            self.path = self.reconstruct_path(current_node)
 
 
 
@@ -73,13 +77,27 @@ class AStar():
         path.reverse()
         return(path)
 
+    
+    def reconstruct_path_nodes(self, node):
+        current_node = node
+        path = []
+        while (current_node != self.start):
+            path.append(current_node)
+            current_node = current_node.parent
+        path.reverse()
+        return(path)
+
 
     def path_info(self):
         if self.reached:
             print("\nGoal reached.")
-            print("Using A*, the shortest path between < TILE = " + 
+
+            stdout.write("Using A*, the shortest path between < TILE = " + 
                    str(self.start.tile_pos) + " > and < TILE = " + 
-                   str(self.target.tile_pos) + " > is " + 
-                   str(len(self.path) + "\n"))
+                   str(self.target.tile_pos) + " > is ")   
+            stdout.write ("\033[1;31m")
+            stdout.write ("|| " + str(len(self.path)) + " ||\n\n")
+            stdout.write("\033[0;0m")
+                   
         else:
-            print("No path found...")
+            print("No path found...\n")
