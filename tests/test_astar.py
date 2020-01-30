@@ -16,7 +16,6 @@ from lib.world import World
 from lib.node import Node
 from lib.astar import AStar
 import math
-from lib.pathfinder import *
 
 
 def generate_world():
