@@ -16,8 +16,8 @@ from lib.world import World
 from lib.node import Node
 from lib.astar import AStar
 from lib.dfs import DepthFirstSearch
+from lib.stw import SpanningTreeWalk
 from lib.bfs import BreadthFirstSearch
-from lib.pathfinder import *
 from lib.dijkstra import Dijkstra
 
 # --------------------------------------------- #
@@ -30,6 +30,23 @@ def bfs():
     first = int(input("Start Node --->  "))
     last = int(input("Target Node --->  "))
     pathfinder = BreadthFirstSearch(first, last, True, env)
+    pathfinder.shortest_path()
+    pathfinder.path_info()
+
+    env.display_path(pathfinder.path)
+
+    while(1):
+        pass
+
+
+def spanningtreewalk():
+    env = World(40, 20, .2)
+    env.display()
+    env.display_available_pos()
+
+    first = int(input("Start Node --->  "))
+    last = int(input("Target Node --->  "))
+    pathfinder = SpanningTreeWalk(first, last, True, env)
     pathfinder.shortest_path()
     pathfinder.path_info()
 
@@ -95,15 +112,15 @@ def main():
     algorithm = args['pathfinding']
 
     if algorithm == 'a*':
-        pass
+        astar()
     elif algorithm == 'dijkstra':
-        pass
+        dijkstra()
     elif algorithm == 'dfs':
-        pass
+        dfs()
     elif algorithm == 'bfs':
-        pass
+        bfs()
     elif algorithm == 'stw':
-        pass
+        spanningtreewalk()
     elif algorithm == 'all':
         pass
 
