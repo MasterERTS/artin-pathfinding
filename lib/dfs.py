@@ -42,32 +42,17 @@ class DepthFirstSearch():
                 if self.target == current_node:
                     self.reached = True
                     self.path = [elem.tile_pos for elem in self.visited]
-                    # self.path = self.reconstruct_path(current_node)
                     break
 
                 successors = current_node.successors()
                 for node in successors:
                     if node not in self.visited:
                         self.stack.append(node)
-                        node.parent = current_node
                         
         if not(self.reached):
             stdout.write ("\033[;1m" + "\033[1;31m" )
             stdout.write('========================! NO PATH FOUND !=========================')
             stdout.write("\033[0;0m")
-
-
-    def reconstruct_path(self, node):
-        current_node = node
-        path = []
-
-        while (current_node != self.start):
-            if (current_node in self.visited):
-                path.append(current_node.tile_pos)
-            current_node = current_node.parent
-
-        path.reverse()
-        return(path)
 
     
     def path_info(self):
