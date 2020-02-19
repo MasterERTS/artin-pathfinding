@@ -130,7 +130,7 @@ Bidirectional A* is (with this env configuration)
 def comparative_test(allow_diag):
     continuing = True
     while continuing:
-        env = World(40, 20, .2)
+        env = World(40, 20, 0)
         env.display()
         env.display_available_pos()
 
@@ -166,9 +166,9 @@ def comparative_test(allow_diag):
         print("Computation time for A* = " + str(computation_time_astar) + ' seconds.')
 
         if computation_time_astar > computation_time_bd_astar:
-            print("A* is slower than 2-Way A* by " + str(computation_time_astar/computation_time_bd_astar*100) + "%")
+            print("A* is slower than 2-Way A* by " + str(int(computation_time_astar/computation_time_bd_astar*100)) + "%")
         else:
-            print("2-Way A* is slower than A* by " + str(computation_time_bd_astar/computation_time_astar*100) + "%")
+            print("2-Way A* is slower than A* by " + str(int(computation_time_bd_astar/computation_time_astar*100)) + "%")
         break
 
 
@@ -191,4 +191,4 @@ def main():
         pass
 
 if __name__ == "__main__":
-    comparative_test(False)
+    comparative_test(True)
