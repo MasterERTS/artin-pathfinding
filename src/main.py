@@ -20,6 +20,7 @@ from lib.stw import SpanningTreeWalk
 from lib.bfs import BreadthFirstSearch
 from lib.dijkstra import Dijkstra
 from lib.bidir_astar import TwoWayAStar
+import time
 
 # --------------------------------------------- #
 
@@ -123,6 +124,55 @@ def dfs():
         pass
 
 
+'''
+Bidirectional A* is (with this env configuration) 
+'''
+def comparative_test(allow_diag):
+    continuing = True
+    while continuing:
+        env = World(40, 20, .2)
+        env.display()
+        env.display_available_pos()
+
+        first = int(input("Start Node --->  "))
+        last = int(input("Target Node --->  "))
+
+        zero_time_bd_astar = time.clock()
+        pathfinder = TwoWayAStar(first, last, allow_diag, env)
+        pathfinder.shortest_path()
+        computation_time_bd_astar = time.clock() - zero_time_bd_astar
+
+        if(not(pathfinder.reached)):
+            continuing = False
+            continue
+
+        pathfinder.path_info()
+        env.display_path(pathfinder.path)
+
+        time.sleep(2)
+
+        zero_time_astar = time.clock()
+        pathfinder_bis = AStar(first, last, allow_diag, env)
+        pathfinder_bis.shortest_path()
+
+        computation_time_astar = time.clock() - zero_time_astar
+        pathfinder_bis.path_info()
+        
+        env.display_path(pathfinder_bis.path)
+
+        time.sleep(2)
+
+        print("Computation time for BiDir A* = " + str(computation_time_bd_astar) + ' seconds.')
+        print("Computation time for A* = " + str(computation_time_astar) + ' seconds.')
+
+        if computation_time_astar > computation_time_bd_astar:
+            print("A* is slower than 2-Way A* by " + str(computation_time_astar/computation_time_bd_astar*100) + "%")
+        else:
+            print("2-Way A* is slower than A* by " + str(computation_time_bd_astar/computation_time_astar*100) + "%")
+        break
+
+
+
 def main():
     args = dict([arg.split('=') for arg in sys.argv[1:]])
     algorithm = args['pathfinding']
@@ -141,4 +191,4 @@ def main():
         pass
 
 if __name__ == "__main__":
-    bidir_astar()
+    comparative_test(False)
