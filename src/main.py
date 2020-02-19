@@ -19,6 +19,7 @@ from lib.dfs import DepthFirstSearch
 from lib.stw import SpanningTreeWalk
 from lib.bfs import BreadthFirstSearch
 from lib.dijkstra import Dijkstra
+from lib.bidir_astar import TwoWayAStar
 
 # --------------------------------------------- #
 
@@ -89,6 +90,21 @@ def astar():
     while(1):
         pass
 
+def bidir_astar():
+    env = World(40, 20, .2)
+    env.display()
+    env.display_available_pos()
+
+    first = int(input("Start Node --->  "))
+    last = int(input("Target Node --->  "))
+    pathfinder = TwoWayAStar(first, last, False, env)
+    pathfinder.shortest_path()
+    pathfinder.path_info()
+
+    env.display_path(pathfinder.path)
+
+    while(1):
+        pass
 
 def dfs():
     env = World(40, 20, .2)
@@ -125,4 +141,4 @@ def main():
         pass
 
 if __name__ == "__main__":
-    bfs()
+    bidir_astar()
