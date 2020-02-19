@@ -179,6 +179,8 @@ def main():
 
     if algorithm == 'a*':
         astar()
+    elif algorithm == 'bidir':
+        bidir_astar()
     elif algorithm == 'dijkstra':
         dijkstra()
     elif algorithm == 'dfs':
@@ -191,4 +193,4 @@ def main():
         pass
 
 if __name__ == "__main__":
-    comparative_test(True)
+    bidir_astar()
