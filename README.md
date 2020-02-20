@@ -19,10 +19,6 @@ In the future, I would like to implement a bunch of pathfinding algorithms that 
 * A* with Jump Point Search
 * Best-First
 
-I could also create a Cell class that has the costs (f, h, g) attributes instead of using heavy dictionnaries that results in heavy sorting. ( hard to read ) 
-
-Also, creating a "diagonal" mode could be interesting in terms of optimal search, since a real robot will not just move only up, down, left and right. 
-
 ## Setup
 
 To setup the project on your local machine:
