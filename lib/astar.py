@@ -81,7 +81,6 @@ class AStar():
             stdout.write(
                 '========================! NO PATH FOUND !=========================')
             stdout.write("\033[0;0m")
-            self.path = self.reconstruct_path(current_node)
 
     def path_info(self):
         if self.reached:
