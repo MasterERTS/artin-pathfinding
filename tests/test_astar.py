@@ -36,7 +36,7 @@ def test_admissible_nodiag():
     pathfinder.shortest_path()
     
     if pathfinder.reached:
-        node_path = pathfinder.reconstruct_path_nodes(pathfinder.last_node)
+        node_path = pathfinder.target.reconstruct_path_nodes(pathfinder.start)
         node_path.reverse()
         for node in node_path:
             assert(node.h_cost <= (node.f_cost))
@@ -51,7 +51,7 @@ def test_admissible_diag():
     pathfinder.shortest_path()
     
     if pathfinder.reached:
-        node_path = pathfinder.reconstruct_path_nodes(pathfinder.last_node)
+        node_path = pathfinder.target.reconstruct_path_nodes(pathfinder.start)
         node_path.reverse()
         for node in node_path:
             assert(node.h_cost <= (node.f_cost))
@@ -66,7 +66,7 @@ def test_consistancy_nodiag():
     pathfinder.shortest_path()
     
     if pathfinder.reached:
-        node_path = pathfinder.reconstruct_path_nodes(pathfinder.last_node)
+        node_path = pathfinder.target.reconstruct_path_nodes(pathfinder.start)
         for node in node_path:
             if node != pathfinder.start:
                 assert(node.parent.h_cost <= (abs(node.f_cost - node.parent.f_cost) + 1 + node.h_cost))
@@ -81,7 +81,7 @@ def test_consistancy_diag():
     pathfinder.shortest_path()
     
     if pathfinder.reached:
-        node_path = pathfinder.reconstruct_path_nodes(pathfinder.last_node)
+        node_path = pathfinder.target.reconstruct_path_nodes(pathfinder.start)
         for node in node_path:
             if node != pathfinder.start:
                 assert(node.parent.h_cost <= (abs(node.f_cost - node.parent.f_cost) + math.sqrt(2) + node.h_cost))

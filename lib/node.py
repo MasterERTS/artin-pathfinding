@@ -115,6 +115,18 @@ class Node:
         path.reverse()
         return(path)
 
+    def reconstruct_path_nodes(self, start_node):
+        current_node = self
+        path = []
+        while (current_node.parent != None):
+            path.append(current_node)
+            current_node = current_node.parent
+
+        path.append(start_node)
+
+        path.reverse()
+        return(path)
+
     def __lt__(self, other):
         # comparison method for sorting priority
         return self.f_cost < other.f_cost

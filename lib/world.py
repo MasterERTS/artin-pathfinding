@@ -125,8 +125,9 @@ class World:
 
     # display the world
     def display(self):
+        os.system('clear')
         print('')
-        carriage = 30 - self.L
+        carriage = int(self.L/10)
         spaces = ' ' * carriage
         dashes = '-' * (carriage + int(self.L/2) - 1)
         stdout.write("\033[;1m")
@@ -148,7 +149,7 @@ class World:
 
     def display_stepbystep(self, path, rate):
         print('')
-        carriage = 30 - self.L
+        carriage = int(self.L/10)
         spaces = ' ' * carriage
         dashes = '-' * (carriage + int(self.L/2) - 1)
         stdout.write("\033[;1m")
@@ -177,7 +178,7 @@ class World:
 
     def display_path(self, path):
         print('')
-        carriage = 30 - self.L
+        carriage = int(self.L/10)
         spaces = ' ' * carriage
         dashes = '-' * (carriage + int(self.L/2) - 2)
         stdout.write("\033[;1m")
