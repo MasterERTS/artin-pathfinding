@@ -7,126 +7,107 @@
 @args : algorithm names : ...tbd
 '''
 
+import time
 import numpy as np
 import sys
 from os import path
-sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
-
-from lib.world import World
-from lib.node import Node
-from lib.astar import AStar
-from lib.dfs import DepthFirstSearch
-from lib.stw import SpanningTreeWalk
-from lib.bfs import BreadthFirstSearch
-from lib.dijkstra import Dijkstra
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from lib.bidir_astar import TwoWayAStar
-import time
+from lib.dijkstra import Dijkstra
+from lib.bfs import BreadthFirstSearch
+from lib.stw import SpanningTreeWalk
+from lib.dfs import DepthFirstSearch
+from lib.astar import AStar
+from lib.node import Node
+from lib.world import World
 
 # --------------------------------------------- #
 
-def bfs():
-    env = World(40, 20, .2)
-    env.display()
-    env.display_available_pos()
 
-    first = int(input("Start Node --->  "))
-    last = int(input("Target Node --->  "))
-    pathfinder = BreadthFirstSearch(first, last, True, env)
+def bfs(env, allow_diagonals, display):
+    first = env.list_available_tiles()[0]
+    last = env.list_available_tiles()[-1]
+    pathfinder = BreadthFirstSearch(first, last, allow_diagonals, env)
     pathfinder.shortest_path()
-    pathfinder.path_info()
 
-    env.display_path(pathfinder.path)
+    if display:
+        pathfinder.path_info()
+        env.display_path(pathfinder.path)
 
-    while(1):
-        pass
+    return(len(pathfinder.path))
 
 
-def spanningtreewalk():
-    env = World(40, 20, .2)
-    env.display()
-    env.display_available_pos()
-
-    first = int(input("Start Node --->  "))
-    last = int(input("Target Node --->  "))
-    pathfinder = SpanningTreeWalk(first, last, True, env)
+def spanningtreewalk(env, allow_diagonals, display):
+    first = env.list_available_tiles()[0]
+    last = env.list_available_tiles()[-1]
+    pathfinder = SpanningTreeWalk(first, last, allow_diagonals, env)
     pathfinder.shortest_path()
-    pathfinder.path_info()
 
-    env.display_path(pathfinder.path)
+    if display:
+        pathfinder.path_info()
+        env.display_path(pathfinder.path)
 
-    while(1):
-        pass
+    return(len(pathfinder.path))
 
 
-def dijkstra():
-    env = World(40, 20, .2)
-    env.display()
-    env.display_available_pos()
-
-    first = int(input("Start Node --->  "))
-    last = int(input("Target Node --->  "))
-    pathfinder = Dijkstra(first, last, True, env)
+def dijkstra(env, allow_diagonals, display):
+    first = env.list_available_tiles()[0]
+    last = env.list_available_tiles()[-1]
+    pathfinder = Dijkstra(first, last, allow_diagonals, env)
     pathfinder.shortest_path()
-    pathfinder.path_info()
 
-    env.display_path(pathfinder.path)
+    if display:
+        pathfinder.path_info()
+        env.display_path(pathfinder.path)
 
-    while(1):
-        pass
+    return(len(pathfinder.path))
 
 
-def astar():
-    env = World(40, 20, .2)
-    env.display()
-    env.display_available_pos()
-
-    first = int(input("Start Node --->  "))
-    last = int(input("Target Node --->  "))
-    pathfinder = AStar(first, last, True, env)
+def astar(env, allow_diagonals, display):
+    first = env.list_available_tiles()[0]
+    last = env.list_available_tiles()[-1]
+    pathfinder = AStar(first, last, allow_diagonals, env)
     pathfinder.shortest_path()
-    pathfinder.path_info()
 
-    env.display_path(pathfinder.path)
+    if display:
+        pathfinder.path_info()
+        env.display_path(pathfinder.path)
 
-    while(1):
-        pass
+    return(len(pathfinder.path))
 
-def bidir_astar():
-    env = World(40, 20, .2)
-    env.display()
-    env.display_available_pos()
 
-    first = int(input("Start Node --->  "))
-    last = int(input("Target Node --->  "))
-    pathfinder = TwoWayAStar(first, last, False, env)
+def bidir_astar(env, allow_diagonals, display):
+    first = env.list_available_tiles()[0]
+    last = env.list_available_tiles()[-1]
+    pathfinder = TwoWayAStar(first, last, allow_diagonals, env)
     pathfinder.shortest_path()
-    pathfinder.path_info()
 
-    env.display_path(pathfinder.path)
+    if display:
+        pathfinder.path_info()
+        env.display_path(pathfinder.path)
 
-    while(1):
-        pass
+    return(len(pathfinder.path))
 
-def dfs():
-    env = World(40, 20, .2)
-    env.display()
-    env.display_available_pos()
 
-    first = int(input("Start Node --->  "))
-    last = int(input("Target Node --->  "))
-    pathfinder = DepthFirstSearch(first, last, False, env)
+def dfs(env, allow_diagonals, display):
+
+    first = env.list_available_tiles()[0]
+    last = env.list_available_tiles()[-1]
+    pathfinder = DepthFirstSearch(first, last, allow_diagonals, env)
     pathfinder.shortest_path()
-    pathfinder.path_info()
 
-    env.display_path(pathfinder.path)
+    if display:
+        pathfinder.path_info()
+        env.display_path(pathfinder.path)
 
-    while(1):
-        pass
+    return(len(pathfinder.path))
 
 
 '''
 Bidirectional A* is (with this env configuration) 
 '''
+
+
 def comparative_test(allow_diag):
     continuing = True
     while continuing:
@@ -134,8 +115,8 @@ def comparative_test(allow_diag):
         env.display()
         env.display_available_pos()
 
-        first = int(input("Start Node --->  "))
-        last = int(input("Target Node --->  "))
+        first = env.list_available_tiles()[0]
+        last = env.list_available_tiles()[-1]
 
         zero_time_bd_astar = time.clock()
         pathfinder = TwoWayAStar(first, last, allow_diag, env)
@@ -157,40 +138,56 @@ def comparative_test(allow_diag):
 
         computation_time_astar = time.clock() - zero_time_astar
         pathfinder_bis.path_info()
-        
+
         env.display_path(pathfinder_bis.path)
 
         time.sleep(2)
 
-        print("Computation time for BiDir A* = " + str(computation_time_bd_astar) + ' seconds.')
-        print("Computation time for A* = " + str(computation_time_astar) + ' seconds.')
+        print("Computation time for BiDir A* = " +
+              str(computation_time_bd_astar) + ' seconds.')
+        print("Computation time for A* = " +
+              str(computation_time_astar) + ' seconds.')
 
         if computation_time_astar > computation_time_bd_astar:
-            print("A* is slower than 2-Way A* by " + str(int(computation_time_astar/computation_time_bd_astar*100)) + "%")
+            print("A* is slower than 2-Way A* by " +
+                  str(int(computation_time_astar/computation_time_bd_astar*100)) + "%")
         else:
-            print("2-Way A* is slower than A* by " + str(int(computation_time_bd_astar/computation_time_astar*100)) + "%")
+            print("2-Way A* is slower than A* by " +
+                  str(int(computation_time_bd_astar/computation_time_astar*100)) + "%")
         break
 
+
+def dataviz(env, allow_diagonals):
+    display = False
+    pass
 
 
 def main():
     args = dict([arg.split('=') for arg in sys.argv[1:]])
     algorithm = args['pathfinding']
 
-    if algorithm == 'a*':
-        astar()
+    env = World(40, 20, 0.2)
+    env.display()
+    env.display_available_pos()
+
+    allow_diagonals = False
+    display = True
+
+    if algorithm == 'astar':
+        astar(env, allow_diagonals, display)
     elif algorithm == 'bidir':
-        bidir_astar()
+        bidir_astar(env, allow_diagonals, display)
     elif algorithm == 'dijkstra':
-        dijkstra()
+        dijkstra(env, allow_diagonals, display)
     elif algorithm == 'dfs':
-        dfs()
+        dfs(env, allow_diagonals, display)
     elif algorithm == 'bfs':
-        bfs()
+        bfs(env, allow_diagonals, display)
     elif algorithm == 'stw':
-        spanningtreewalk()
+        spanningtreewalk(env, allow_diagonals, display)
     elif algorithm == 'all':
-        pass
+        dataviz(env, allow_diagonals)
+
 
 if __name__ == "__main__":
-    bidir_astar()
+    main()
