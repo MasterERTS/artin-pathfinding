@@ -38,7 +38,7 @@ class BreadthFirstSearch():
             self.target = Node(target, target, 0, None, World,
                                False, allow_diagonals, True)
 
-            self.path = [self.start.tile_pos]
+        self.path = [self.start.tile_pos]
 
     def shortest_path(self):
         while(self.queue):
