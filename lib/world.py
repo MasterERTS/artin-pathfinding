@@ -23,6 +23,7 @@ class World:
     def __init__(self, L, H, P):
         self.L = L
         self.H = H
+        self.pWalls = P
 
         # the world is represented by an array with one dimension
         self.w = [0 for i in range(L*H)]  # initialise every tile to empty (0)
@@ -52,6 +53,53 @@ class World:
             if self.w[i] == 0:
                 available_tiles.append(i)
         return(available_tiles)
+
+    def get_start(self):
+        available_tiles = self.list_available_tiles()
+        while (len(available_tiles) > 0):
+            start_tile = available_tiles.pop(0)
+            nigh_tiles = self.neighbours(start_tile)
+            if (not(nigh_tiles)):
+                continue
+            else:
+                break
+        return(start_tile)
+
+    def get_target(self):
+        available_tiles = self.list_available_tiles()
+        while (len(available_tiles) > 0):
+            target_tile = available_tiles.pop()
+            nigh_tiles = self.neighbours(target_tile)
+            if (not(nigh_tiles)):
+                continue
+            else:
+                break
+        return(target_tile)
+
+    def neighbours(self, i):
+        if i < 0 or i >= self.L * self.H or self.w[i] == 1:
+            # i is an incorrect tile number (outside the array or on a wall)
+            return []
+
+        else:
+            # look in the four adjacent tiles and keep only those with no wall
+            successors = list(filter(lambda x: self.w[x] != 1, [i - 1,
+                                                                    i + 1,
+                                                                    i - self.L,
+                                                                    i + self.L]))
+            return successors
+
+        '''if self.diagonals == True:
+            successors = list(filter(lambda x: self.w[x] != 1, [i - 1,
+                                                                      i + 1,
+                                                                      i - self.L,
+                                                                      i + self.L,
+                                                                      i - self.L - 1,
+                                                                      i - self.L + 1,
+                                                                      i + self.L - 1,
+                                                                      i + self.L + 1]))
+            return successors
+        '''
 
     def display_available_pos(self):
         print('\n\n')
