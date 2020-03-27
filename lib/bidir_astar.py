@@ -19,7 +19,8 @@ class TwoWayAStar(AStar):
         self.second_dir = AStar(target, start, allow_diagonals, World)
 
         self.reached = False
-        self.path = []
+
+        self.path = [self.start.tile_pos]
 
     def shortest_path(self):
         while self.first_dir.open_nodes and self.second_dir.open_nodes:
@@ -31,7 +32,8 @@ class TwoWayAStar(AStar):
             if first_dir_node.tile_pos == second_dir_node.tile_pos:
                 self.reached = True
                 self.meeting = first_dir_node.tile_pos
-                self.path = self.reconstruct_path(first_dir_node, second_dir_node)
+                self.path = self.reconstruct_path(
+                    first_dir_node, second_dir_node)
                 break
 
             else:
