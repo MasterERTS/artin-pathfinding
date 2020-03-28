@@ -13,8 +13,14 @@ import sys
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from lib.world import World
 
+def computeAndDisplayAStar(pathfinder):
+    path, time = pathfinder.computePathAStar()
+    pathfinder.displayPath(path)
+
+def showComparisonPlots(pathfinder, test_samples):
+    pathfinder_api.benchmark(test_samples, True, True)
 
 if __name__ == "__main__":
     env = World(70, 20, 0.2)
     pathfinder_api = PathFinder(env)
-    pathfinder_api.benchmark(60, True, True)
+    showComparisonPlots(pathfinder_api, 60)

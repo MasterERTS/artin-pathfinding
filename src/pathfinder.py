@@ -159,7 +159,7 @@ class PathFinder():
                 timeList_dfs.append(time_dfs)
                 timeList_bfs.append(time_bfs)
                 timeList_stw.append(time_stw)
-                timeList_dij.append(time_stw)
+                timeList_dij.append(time_dij)
             
             self.setEnv(World(env.L, env.H, env.pWalls), self.diagonals)
         
