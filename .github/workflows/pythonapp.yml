@@ -2,10 +2,9 @@ name: github-ci
 
 on: 
   pull _request:
-  
   push:
     branches:
-      master
+      - master
 
 jobs:
   build:
