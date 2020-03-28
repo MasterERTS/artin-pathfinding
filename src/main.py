@@ -15,7 +15,6 @@ from lib.world import World
 
 
 if __name__ == "__main__":
-    env = World(70, 20, 0.17)
+    env = World(70, 20, 0.2)
     pathfinder_api = PathFinder(env)
-    pathfinder_api.benchmark(25, True, True)
-
+    pathfinder_api.benchmark(60, True, True)
