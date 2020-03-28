@@ -3,16 +3,15 @@ import time
 import random
 from os import path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-from lib.bidir_astar import TwoWayAStar
-from lib.dijkstra import Dijkstra
-from lib.bfs import BreadthFirstSearch
-from lib.stw import SpanningTreeWalk
-from lib.dfs import DepthFirstSearch
-from lib.astar import AStar
-from lib.node import Node
-from lib.world import World
 from lib.dataviz import PathfindingComparator
-
+from lib.world import World
+from lib.node import Node
+from lib.astar import AStar
+from lib.dfs import DepthFirstSearch
+from lib.stw import SpanningTreeWalk
+from lib.bfs import BreadthFirstSearch
+from lib.dijkstra import Dijkstra
+from lib.bidir_astar import TwoWayAStar
 
 class PathFinder():
     def __init__(self, env, diagonals=False):
@@ -38,14 +37,19 @@ class PathFinder():
 
     def computePathBFS(self):
         init_time = time.clock()
-        
+
         pathfinder = BreadthFirstSearch(
             self.start, self.target, self.diagonals, self.env)
         pathfinder.shortest_path()
 
         final_time = time.clock() - init_time
 
-        return(pathfinder.path, final_time)
+        pathInfo = {
+            "Path": pathfinder.path,
+            "Costs": pathfinder.costs
+        }
+
+        return(pathInfo, final_time)
 
     def computePathDFS(self):
         init_time = time.clock()
@@ -56,7 +60,12 @@ class PathFinder():
 
         final_time = time.clock() - init_time
 
-        return(pathfinder.path, final_time)
+        pathInfo = {
+            "Path": pathfinder.path,
+            "Costs": pathfinder.costs
+        }
+
+        return(pathInfo, final_time)
 
     def computePathSTW(self):
         init_time = time.clock()
@@ -67,7 +76,12 @@ class PathFinder():
 
         final_time = time.clock() - init_time
 
-        return(pathfinder.path, final_time)
+        pathInfo = {
+            "Path": pathfinder.path,
+            "Costs": pathfinder.costs
+        }
+
+        return(pathInfo, final_time)
 
     def computePathAStar(self):
         init_time = time.clock()
@@ -77,7 +91,12 @@ class PathFinder():
 
         final_time = time.clock() - init_time
 
-        return(pathfinder.path, final_time)
+        pathInfo = {
+            "Path": pathfinder.path,
+            "Costs": pathfinder.costs
+        }
+
+        return(pathInfo, final_time)
 
     def computePathDijkstra(self):
         init_time = time.clock()
@@ -88,7 +107,12 @@ class PathFinder():
 
         final_time = time.clock() - init_time
 
-        return(pathfinder.path, final_time)
+        pathInfo = {
+            "Path": pathfinder.path,
+            "Costs": pathfinder.costs
+        }
+
+        return(pathInfo, final_time)
 
     def computePathBidirAStar(self):
         init_time = time.clock()
@@ -97,9 +121,14 @@ class PathFinder():
             self.start, self.target, self.diagonals, self.env)
         pathfinder.shortest_path()
 
-        final_time = time.clock() - init_time
+        final_time = time.clock()
 
-        return(pathfinder.path, final_time)
+        pathInfo = {
+            "Path": pathfinder.path,
+            "Costs": pathfinder.costs
+        }
+
+        return(pathInfo, final_time)
 
     def benchmark(self, test_samples, lengths=True, time=False):
         env = self.env
@@ -134,7 +163,7 @@ class PathFinder():
 
         for i in range(test_samples):
             self.env.display()
-            
+
             # Computation
             path_astar, time_astar = self.computePathAStar()
             path_bidir, time_bidir = self.computePathBidirAStar()
@@ -145,12 +174,12 @@ class PathFinder():
 
             # Get all Paths for Comparison
             if lengths:
-                pathList_astar.append(len(path_astar))
-                pathList_bidir.append(len(path_bidir))
-                pathList_dfs.append(len(path_dfs))
-                pathList_bfs.append(len(path_bfs))
-                pathList_stw.append(len(path_stw))
-                pathList_dij.append(len(path_dij))
+                pathList_astar.append(sum(path_astar["Costs"]))
+                pathList_bidir.append(sum(path_bidir["Costs"]))
+                pathList_dfs.append(sum(path_dfs["Costs"]))
+                pathList_bfs.append(sum(path_bfs["Costs"]))
+                pathList_stw.append(sum(path_stw["Costs"]))
+                pathList_dij.append(sum(path_dij["Costs"]))
 
             # Get all Times for Comparison
             if time:
@@ -160,32 +189,40 @@ class PathFinder():
                 timeList_bfs.append(time_bfs)
                 timeList_stw.append(time_stw)
                 timeList_dij.append(time_dij)
-            
+
             self.setEnv(World(env.L, env.H, env.pWalls), self.diagonals)
-        
+
         if lengths:
-            fig_title = "Path Length Comparison"
+            fig_title = "Total Cost Comparison"
             views.addFigure(3, fig_title)
             views.addPlotToAxs(pathList_astar, fig_title, 0, "AStar")
             views.addPlotToAxs(pathList_dij, fig_title, 1, "Dijkstra")
-            views.addPlotToAxs(pathList_bidir, fig_title, 2, "Bidirectional AStar")
+            views.addPlotToAxs(pathList_bidir, fig_title,
+                               2, "Bidirectional AStar")
 
             views.addFigure(3, fig_title)
-            views.addPlotToAxs(pathList_dfs, fig_title, 0, "Depth-First Search")
-            views.addPlotToAxs(pathList_bfs, fig_title, 1, "Breadth-First Search")
-            views.addPlotToAxs(pathList_stw, fig_title, 2, "Spanning Tree Walk")
+            views.addPlotToAxs(pathList_dfs, fig_title,
+                               0, "Depth-First Search")
+            views.addPlotToAxs(pathList_bfs, fig_title,
+                               1, "Breadth-First Search")
+            views.addPlotToAxs(pathList_stw, fig_title,
+                               2, "Spanning Tree Walk")
 
         if time:
             fig_title = "Computation Time Comparison"
             views.addFigure(3, fig_title)
             views.addPlotToAxs(timeList_astar, fig_title, 0, "AStar")
             views.addPlotToAxs(timeList_dij, fig_title, 1, "Dijkstra")
-            views.addPlotToAxs(timeList_bidir, fig_title, 2, "Bidirectional AStar")
+            views.addPlotToAxs(timeList_bidir, fig_title,
+                               2, "Bidirectional AStar")
 
             views.addFigure(3, fig_title)
-            views.addPlotToAxs(timeList_dfs, fig_title, 0, "Depth-First Search")
-            views.addPlotToAxs(timeList_bfs, fig_title, 1, "Breadth-First Search")
-            views.addPlotToAxs(timeList_stw, fig_title, 2, "Spanning Tree Walk")
+            views.addPlotToAxs(timeList_dfs, fig_title,
+                               0, "Depth-First Search")
+            views.addPlotToAxs(timeList_bfs, fig_title,
+                               1, "Breadth-First Search")
+            views.addPlotToAxs(timeList_stw, fig_title,
+                               2, "Spanning Tree Walk")
 
         views.show()
 
