@@ -1,7 +1,7 @@
 name: github-ci
 
 on: 
-  pull _request:
+  pull_request:
   push:
     branches:
       - master
