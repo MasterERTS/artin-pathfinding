@@ -82,6 +82,10 @@ class Dijkstra():
                 '========================! NO PATH FOUND !=========================')
             stdout.write("\033[0;0m")
 
+    def compute_paths(self):
+        if self.reached:
+            self.path, self.costs = self.target.reconstruct_path()
+
     def path_info(self):
         if self.reached:
             print("\nGoal reached.")

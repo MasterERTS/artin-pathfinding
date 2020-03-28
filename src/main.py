@@ -18,6 +18,13 @@ def computeAndDisplayAStar(pathfinder):
     pathfinder.displayPath(path["Path"])
     print("\n Total Cost = " + str(path["Costs"][-1]))
 
+def computeAndDisplayBidirAStar(pathfinder):
+    path, time = pathfinder.computePathBidirAStar()
+    pathfinder.displayPath(path["Path"])
+    print('')
+    print(path["Costs"])
+    print("\n Total Cost = " + str(path["Costs"][-1]))
+
 def showComparisonPlots(pathfinder, test_samples):
     pathfinder_api.benchmark(test_samples, True, True)
 
@@ -26,3 +33,4 @@ if __name__ == "__main__":
     pathfinder_api = PathFinder(env)
     showComparisonPlots(pathfinder_api, 60)
     # computeAndDisplayAStar(pathfinder_api)
+    # computeAndDisplayBidirAStar(pathfinder_api)

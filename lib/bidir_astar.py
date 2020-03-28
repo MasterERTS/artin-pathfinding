@@ -32,9 +32,8 @@ class TwoWayAStar(AStar):
 
             if first_dir_node.tile_pos == second_dir_node.tile_pos:
                 self.reached = True
-                self.meeting = first_dir_node.tile_pos
-                self.path, self.costs = self.reconstruct_path(
-                    first_dir_node, second_dir_node)
+                self.f_meeting = first_dir_node
+                self.s_meeting = second_dir_node
                 break
 
             else:
@@ -78,6 +77,10 @@ class TwoWayAStar(AStar):
             stdout.write(
                 '========================! NO PATH FOUND !=========================')
             stdout.write("\033[0;0m")
+
+    def compute_paths(self):
+        if self.reached:
+            self.path, self.costs = self.reconstruct_path(self.f_meeting, self.s_meeting)
 
     def reconstruct_path(self, f_node, s_node):
         # Might be an issue

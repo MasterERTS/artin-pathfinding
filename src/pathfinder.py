@@ -44,6 +44,8 @@ class PathFinder():
 
         final_time = time.clock() - init_time
 
+        pathfinder.c
+
         pathInfo = {
             "Path": pathfinder.path,
             "Costs": pathfinder.costs
@@ -59,6 +61,8 @@ class PathFinder():
         pathfinder.shortest_path()
 
         final_time = time.clock() - init_time
+
+        pathfinder.c
 
         pathInfo = {
             "Path": pathfinder.path,
@@ -76,6 +80,8 @@ class PathFinder():
 
         final_time = time.clock() - init_time
 
+        pathfinder.c
+
         pathInfo = {
             "Path": pathfinder.path,
             "Costs": pathfinder.costs
@@ -90,6 +96,8 @@ class PathFinder():
         pathfinder.shortest_path()
 
         final_time = time.clock() - init_time
+
+        pathfinder.c
 
         pathInfo = {
             "Path": pathfinder.path,
@@ -107,6 +115,8 @@ class PathFinder():
 
         final_time = time.clock() - init_time
 
+        pathfinder.c
+
         pathInfo = {
             "Path": pathfinder.path,
             "Costs": pathfinder.costs
@@ -122,6 +132,8 @@ class PathFinder():
         pathfinder.shortest_path()
 
         final_time = time.clock() - init_time
+
+        pathfinder.compute_paths()
 
         pathInfo = {
             "Path": pathfinder.path,

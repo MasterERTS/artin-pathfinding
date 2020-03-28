@@ -49,7 +49,6 @@ class DepthFirstSearch():
                 self.visited.append(current_node)
                 if self.target == current_node:
                     self.reached = True
-                    self.path, self.costs = current_node.reconstruct_path()
                     break
 
                 successors = current_node.successors()
@@ -63,6 +62,10 @@ class DepthFirstSearch():
             stdout.write(
                 '========================! NO PATH FOUND !=========================')
             stdout.write("\033[0;0m")
+
+    def compute_paths(self):
+        if self.reached:
+            self.path, self.costs = self.target.reconstruct_path()
 
     def path_info(self):
         if self.reached:
