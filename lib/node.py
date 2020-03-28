@@ -6,7 +6,7 @@
 '''
 
 from lib.world import World
-
+from math import sqrt
 
 class Node:
     def __init__(self, tile_pos, target, g_cost, parent, World, is_astar=None, diagonals=None, final_node=None):
@@ -52,15 +52,20 @@ class Node:
         pass
 
     def calculate_heuristic(self):
-        row_current = int(self.tile_pos / self.world.L)
-        col_current = self.tile_pos % self.world.H
-        row_target = int(self.target / self.world.L)
-        col_target = self.target % self.world.H
+        row_current = int(self.tile_pos / self.world.H)
+        col_current = self.tile_pos % self.world.L
+        row_target = int(self.target / self.world.H)
+        col_target = self.target % self.world.L
 
-        if self.diagonals == True:
-            return ((row_current - row_target)**2 + (col_current - col_target)**2)**0.5
+        dy = abs(row_current - row_target)
+        dx = abs(col_current - col_target)
+
+        if self.diagonals == False:
+            return (1 * (dx + dy))
         else:
-            return abs(row_current - row_target) + abs(col_current - col_target)
+            dy = abs(row_current - row_target)
+            dx = abs(col_current - col_target)
+            return(1 * max(dx, dy) + (sqrt(2) - 1) * min(dx, dy))
 
     def successors(self):
         i = self.tile_pos
@@ -78,8 +83,15 @@ class Node:
                                                                       i - self.world.L + 1,
                                                                       i + self.world.L - 1,
                                                                       i + self.world.L + 1]))
-            children_nodes = [Node(elem, self.target, self.g_cost + 1, self, self.world,
-                                   self.is_astar, self.diagonals, self.final_node) for elem in successors]
+
+            children_nodes = []
+            for elem in successors:
+                if elem == (i-1) or elem == (i+1) or elem == (i - self.world.L) or elem == (i + self.world.L):
+                    children_nodes.append(Node(elem, self.target, self.g_cost + 1, self, self.world,
+                                   self.is_astar, self.diagonals, self.final_node))
+                else:
+                    children_nodes.append(Node(elem, self.target, self.g_cost + sqrt(2), self, self.world,
+                                   self.is_astar, self.diagonals, self.final_node))
             return children_nodes
 
         else:
@@ -103,32 +115,49 @@ class Node:
                 print("A visited tile is not ACCESSIBLE.")
             return(False)
 
-    def reconstruct_path(self, start_node):
+    def reconstruct_path(self):
         current_node = self
         path = []
+        costs = []
         while (current_node.parent != None):
             path.append(current_node.tile_pos)
+            costs.append(current_node.g_cost)
             current_node = current_node.parent
 
-        path.append(start_node.tile_pos)
-
+        path.append(current_node.tile_pos)
+        costs.append(current_node.g_cost)
         path.reverse()
-        return(path)
+        costs.reverse()
+        return(path, costs)
 
-    def reconstruct_path_nodes(self, start_node):
+    def reconstruct_path_nodes(self):
         current_node = self
         path = []
         while (current_node.parent != None):
             path.append(current_node)
             current_node = current_node.parent
 
-        path.append(start_node)
+        path.append(current_node)
 
         path.reverse()
         return(path)
 
+    def reconstruct_costs(self):
+        current_node = self
+        costs = []
+        while (current_node.parent != None):
+            costs.append(current_node.g_cost)
+            current_node = current_node.parent
+
+        costs.append(current_node.g_cost)
+
+        costs.reverse()
+        return(costs)
+
     def __lt__(self, other):
         # comparison method for sorting priority
+        if self.f_cost == other.f_cost:
+            self.f_cost *= 1.001
         return self.f_cost < other.f_cost
 
     def __eq__(self, other):

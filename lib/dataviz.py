@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 class PathfindingComparator():
     def __init__(self):
         self.subplots_n = 0
@@ -16,7 +17,8 @@ class PathfindingComparator():
         self.subplots_n += 1
 
     def addFigure(self, nplots, suptitle):
-        self.figs[suptitle], self.axs[suptitle] = plt.subplots(nplots, sharex=True, sharey=True)
+        self.figs[suptitle], self.axs[suptitle] = plt.subplots(
+            nplots, sharex=True, sharey=True)
         self.figs[suptitle].suptitle(suptitle)
         self.axs_available[suptitle] = [elem for elem in range(nplots)]
         self.figs_flags[suptitle] = True
@@ -25,16 +27,19 @@ class PathfindingComparator():
         if self.figs_flags[fig_suptitle] == True:
             if axs_n in self.axs_available[fig_suptitle]:
                 if plotLabel != '':
-                    self.axs[fig_suptitle][axs_n].plot(path, c=np.random.rand(3,))
+                    self.axs[fig_suptitle][axs_n].plot(
+                        path, c=np.random.rand(3,))
                 else:
-                    self.axs[fig_suptitle][axs_n].plot(path, c=np.random.rand(3,), label=plotLabel)
+                    self.axs[fig_suptitle][axs_n].plot(
+                        path, c=np.random.rand(3,), label=plotLabel)
                 self.axs[fig_suptitle][axs_n].set_title(axs_title)
                 self.axs_available[fig_suptitle].remove(axs_n)
-            
+
             else:
-                self.axs[fig_suptitle][axs_n].plot(path, c=np.random.rand(3,), label=plotLabel)
+                self.axs[fig_suptitle][axs_n].plot(
+                    path, c=np.random.rand(3,), label=plotLabel)
         else:
             print("Error : Trying to add a plot to a Figure that doesn't exist.")
-            
+
     def show(self):
         plt.show()

@@ -39,6 +39,7 @@ class BreadthFirstSearch():
                                False, allow_diagonals, True)
 
         self.path = [self.start.tile_pos]
+        self.costs = [0]
 
     def shortest_path(self):
         while(self.queue):
@@ -48,7 +49,7 @@ class BreadthFirstSearch():
                 self.visited.append(current_node)
                 if self.target == current_node:
                     self.reached = True
-                    self.path = current_node.reconstruct_path(self.start)
+                    self.target = current_node
                     break
 
                 successors = current_node.successors()
@@ -62,6 +63,10 @@ class BreadthFirstSearch():
             stdout.write(
                 '========================! NO PATH FOUND !=========================')
             stdout.write("\033[0;0m")
+
+    def compute_paths(self):
+        if self.reached:
+            self.path, self.costs = self.target.reconstruct_path()
 
     def path_info(self):
         if self.reached:

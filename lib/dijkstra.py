@@ -43,6 +43,7 @@ class Dijkstra():
                                False, allow_diagonals, True)
 
         self.path = [self.start.tile_pos]
+        self.costs = [0]
 
     def shortest_path(self):
         while self.open_nodes:
@@ -51,8 +52,7 @@ class Dijkstra():
 
             if current_node == self.target:
                 self.reached = True
-                self.last_node = current_node
-                self.path = self.reconstruct_path(current_node)
+                self.target = current_node
                 break
 
             else:
@@ -80,27 +80,10 @@ class Dijkstra():
             stdout.write(
                 '========================! NO PATH FOUND !=========================')
             stdout.write("\033[0;0m")
-            self.path = self.reconstruct_path(current_node)
 
-
-    def reconstruct_path(self, node):
-        current_node = node
-        path = []
-        while (current_node != self.start):
-            path.append(current_node.tile_pos)
-            current_node = current_node.parent
-
-        path.reverse()
-        return(path)
-
-    def reconstruct_path_nodes(self, node):
-        current_node = node
-        path = []
-        while (current_node != self.start):
-            path.append(current_node)
-            current_node = current_node.parent
-        path.reverse()
-        return(path)
+    def compute_paths(self):
+        if self.reached:
+            self.path, self.costs = self.target.reconstruct_path()
 
     def path_info(self):
         if self.reached:

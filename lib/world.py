@@ -120,7 +120,7 @@ class World:
             stdout.write(str(elem) + ' ')
             k += 1
         stdout.write("\033[0;32m")
-        print("\n\n/!\ Pick available tiles for starting and target positions.\n")
+        print("\n\nWARNING : Pick available tiles for starting and target positions.\n")
         stdout.write("\033[0;0m")
 
     # display the world
