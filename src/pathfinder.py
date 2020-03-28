@@ -44,7 +44,7 @@ class PathFinder():
 
         final_time = time.clock() - init_time
 
-        pathfinder.c
+        pathfinder.compute_paths()
 
         pathInfo = {
             "Path": pathfinder.path,
@@ -62,7 +62,7 @@ class PathFinder():
 
         final_time = time.clock() - init_time
 
-        pathfinder.c
+        pathfinder.compute_paths()
 
         pathInfo = {
             "Path": pathfinder.path,
@@ -80,7 +80,7 @@ class PathFinder():
 
         final_time = time.clock() - init_time
 
-        pathfinder.c
+        pathfinder.compute_paths()
 
         pathInfo = {
             "Path": pathfinder.path,
@@ -97,7 +97,7 @@ class PathFinder():
 
         final_time = time.clock() - init_time
 
-        pathfinder.c
+        pathfinder.compute_paths()
 
         pathInfo = {
             "Path": pathfinder.path,
@@ -115,7 +115,7 @@ class PathFinder():
 
         final_time = time.clock() - init_time
 
-        pathfinder.c
+        pathfinder.compute_paths()
 
         pathInfo = {
             "Path": pathfinder.path,
