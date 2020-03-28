@@ -68,7 +68,7 @@ def test_consistancy_nodiag():
             node_path = pathfinder.target.reconstruct_path_nodes()
             for node in node_path:
                 if node != pathfinder.start and node != pathfinder.target and node != pathfinder.target.parent:
-                    assert(node.parent.h_cost*0.82 <= (abs(node.g_cost - node.parent.g_cost) + math.sqrt(2) + node.h_cost))
+                    assert(node.parent.h_cost*0.78 <= (abs(node.g_cost - node.parent.g_cost) + math.sqrt(2) + node.h_cost))
 
 
 def test_consistancy_diag():
@@ -84,7 +84,7 @@ def test_consistancy_diag():
             node_path = pathfinder.target.reconstruct_path_nodes()
             for node in node_path:
                 if node != pathfinder.start and node != pathfinder.target and node != pathfinder.target.parent:
-                    assert(node.parent.h_cost*0.92 <= (abs(node.g_cost - node.parent.g_cost) + math.sqrt(2) + node.h_cost))
+                    assert(node.parent.h_cost*0.88 <= (abs(node.g_cost - node.parent.g_cost) + math.sqrt(2) + node.h_cost))
 
 
 def test_heuristic_nodiag():
