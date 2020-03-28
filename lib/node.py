@@ -119,7 +119,10 @@ class Node:
             costs.append(current_node.g_cost)
             current_node = current_node.parent
 
+        path.append(current_node.tile_pos)
+        costs.append(current_node.g_cost)
         path.reverse()
+        costs.reverse()
         return(path, costs)
 
     def reconstruct_path_nodes(self):
