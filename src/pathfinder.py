@@ -174,12 +174,12 @@ class PathFinder():
 
             # Get all Paths for Comparison
             if lengths:
-                pathList_astar.append(sum(path_astar["Costs"]))
-                pathList_bidir.append(sum(path_bidir["Costs"]))
-                pathList_dfs.append(sum(path_dfs["Costs"]))
-                pathList_bfs.append(sum(path_bfs["Costs"]))
-                pathList_stw.append(sum(path_stw["Costs"]))
-                pathList_dij.append(sum(path_dij["Costs"]))
+                pathList_astar.append(path_astar["Costs"][-1])
+                pathList_bidir.append(path_bidir["Costs"][-1])
+                pathList_dfs.append(path_dfs["Costs"][-1])
+                pathList_bfs.append(path_bfs["Costs"][-1])
+                pathList_stw.append(path_stw["Costs"][-1])
+                pathList_dij.append(path_dij["Costs"][-1])
 
             # Get all Times for Comparison
             if time:
@@ -193,7 +193,7 @@ class PathFinder():
             self.setEnv(World(env.L, env.H, env.pWalls), self.diagonals)
 
         if lengths:
-            fig_title = "Total Cost Comparison"
+            fig_title = "Cost Comparison"
             views.addFigure(3, fig_title)
             views.addPlotToAxs(pathList_astar, fig_title, 0, "AStar")
             views.addPlotToAxs(pathList_dij, fig_title, 1, "Dijkstra")
