@@ -9,10 +9,9 @@
 import numpy as np
 import sys
 from os import path
-sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
-
-from lib.world import World
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from lib.node import Node
+from lib.world import World
 
 
 def test_uniqueness():
@@ -31,6 +30,7 @@ def test_uniqueness():
 
     assert(uniqueness == True)
 
+
 def test_outofbounds():
     env = World(10, 10, 0.2)
     free_tiles = env.list_available_tiles()
@@ -38,6 +38,7 @@ def test_outofbounds():
 
     for elem in new_node:
         assert(elem.tile_pos >= 0 and elem.tile_pos <= (env.L*env.H))
+
 
 def test_availability():
     env = World(10, 10, 0.2)
