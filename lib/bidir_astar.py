@@ -85,6 +85,8 @@ class TwoWayAStar(AStar):
         second_path, second_costs = s_node.reconstruct_path()
         first_path.reverse()
         second_costs.pop(0)
+        for i in range(len(second_costs)):
+            second_costs[i] += first_costs[-1]
         path = first_path + second_path
         costs = first_costs + second_costs
         return(path, costs)
