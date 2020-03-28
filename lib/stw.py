@@ -48,6 +48,7 @@ class SpanningTreeWalk():
 
             if current_node == self.target:
                 self.reached = True
+                self.target = current_node
                 break
 
             else:

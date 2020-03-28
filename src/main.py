@@ -16,6 +16,7 @@ from lib.world import World
 def computeAndDisplayAStar(pathfinder):
     path, time = pathfinder.computePathAStar()
     pathfinder.displayPath(path["Path"])
+    print(path["Costs"])
     print("\n Total Cost = " + str(path["Costs"][-1]))
 
 def computeAndDisplayBidirAStar(pathfinder):
@@ -31,6 +32,6 @@ def showComparisonPlots(pathfinder, test_samples):
 if __name__ == "__main__":
     env = World(70, 20, 0.2)
     pathfinder_api = PathFinder(env)
-    showComparisonPlots(pathfinder_api, 60)
-    # computeAndDisplayAStar(pathfinder_api)
+    # showComparisonPlots(pathfinder_api, 60)
+    computeAndDisplayAStar(pathfinder_api)
     # computeAndDisplayBidirAStar(pathfinder_api)

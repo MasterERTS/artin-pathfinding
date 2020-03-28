@@ -49,6 +49,7 @@ class BreadthFirstSearch():
                 self.visited.append(current_node)
                 if self.target == current_node:
                     self.reached = True
+                    self.target = current_node
                     break
 
                 successors = current_node.successors()

@@ -53,7 +53,7 @@ class AStar():
 
             if current_node == self.target:
                 self.reached = True
-                self.last_node = current_node
+                self.target = current_node
                 break
 
             else:

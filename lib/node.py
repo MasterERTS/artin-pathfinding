@@ -52,15 +52,20 @@ class Node:
         pass
 
     def calculate_heuristic(self):
-        row_current = int(self.tile_pos / self.world.L)
-        col_current = self.tile_pos % self.world.H
-        row_target = int(self.target / self.world.L)
-        col_target = self.target % self.world.H
+        row_current = int(self.tile_pos / self.world.H)
+        col_current = self.tile_pos % self.world.L
+        row_target = int(self.target / self.world.H)
+        col_target = self.target % self.world.L
 
-        if self.diagonals == True:
-            return ((row_current - row_target)**2 + (col_current - col_target)**2)**0.5
+        dy = abs(row_current - row_target)
+        dx = abs(col_current - col_target)
+
+        if self.diagonals == False:
+            return (1 * (dx + dy))
         else:
-            return abs(row_current - row_target) + abs(col_current - col_target)
+            dy = abs(row_current - row_target)
+            dx = abs(col_current - col_target)
+            return(1 * max(dx, dy) + (sqrt(2) - 1) * min(dx, dy))
 
     def successors(self):
         i = self.tile_pos
@@ -151,6 +156,8 @@ class Node:
 
     def __lt__(self, other):
         # comparison method for sorting priority
+        if self.f_cost == other.f_cost:
+            self.f_cost *= 1.001
         return self.f_cost < other.f_cost
 
     def __eq__(self, other):

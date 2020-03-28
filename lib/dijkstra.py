@@ -52,8 +52,7 @@ class Dijkstra():
 
             if current_node == self.target:
                 self.reached = True
-                self.last_node = current_node
-                self.path, self.costs = current_node.reconstruct_path()
+                self.target = current_node
                 break
 
             else:
