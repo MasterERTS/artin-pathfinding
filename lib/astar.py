@@ -44,6 +44,7 @@ class AStar():
                                False, allow_diagonals, True)
 
         self.path = [self.start.tile_pos]
+        self.costs = [0]
 
     def shortest_path(self):
         while self.open_nodes:
@@ -53,7 +54,7 @@ class AStar():
             if current_node == self.target:
                 self.reached = True
                 self.last_node = current_node
-                self.path = current_node.reconstruct_path(self.start)
+                self.path, self.costs = current_node.reconstruct_path()
                 break
 
             else:

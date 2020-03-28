@@ -39,6 +39,7 @@ class DepthFirstSearch():
                                False, allow_diagonals, True)
 
         self.path = [self.start.tile_pos]
+        self.costs = [0]
 
     def shortest_path(self):
         while(self.stack):
@@ -48,7 +49,7 @@ class DepthFirstSearch():
                 self.visited.append(current_node)
                 if self.target == current_node:
                     self.reached = True
-                    self.path = current_node.reconstruct_path(self.start)
+                    self.path, self.costs = current_node.reconstruct_path()
                     break
 
                 successors = current_node.successors()

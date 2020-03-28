@@ -40,6 +40,7 @@ class SpanningTreeWalk():
                                False, allow_diagonals, True)
 
         self.path = [self.start.tile_pos]
+        self.costs = [0]
 
     def shortest_path(self):
         while(self.stack):
@@ -47,7 +48,7 @@ class SpanningTreeWalk():
 
             if current_node == self.target:
                 self.reached = True
-                self.path = current_node.reconstruct_path(self.start)
+                self.path, self.costs = current_node.reconstruct_path()
 
             else:
                 self.visited.append(current_node)
@@ -63,20 +64,6 @@ class SpanningTreeWalk():
             stdout.write(
                 '========================! NO PATH FOUND !=========================')
             stdout.write("\033[0;0m")
-
-    def reconstruct_path(self, node):
-        current_node = node
-        path = []
-
-        while (current_node != self.start):
-            if (current_node in self.visited):
-                path.append(current_node.tile_pos)
-            current_node = current_node.parent
-
-        path.append(self.start.tile_pos)
-
-        path.reverse()
-        return(path)
 
     def path_info(self):
         if self.reached:
