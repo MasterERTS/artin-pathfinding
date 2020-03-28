@@ -121,7 +121,7 @@ class PathFinder():
             self.start, self.target, self.diagonals, self.env)
         pathfinder.shortest_path()
 
-        final_time = time.clock()
+        final_time = time.clock() - init_time
 
         pathInfo = {
             "Path": pathfinder.path,
