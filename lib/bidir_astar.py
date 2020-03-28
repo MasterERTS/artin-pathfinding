@@ -20,7 +20,8 @@ class TwoWayAStar(AStar):
 
         self.reached = False
 
-        self.path = [self.first_dir.path[0]]
+        self.path = self.first_dir.path
+        self.costs = self.first_dir.costs
 
     def shortest_path(self):
         while self.first_dir.open_nodes and self.second_dir.open_nodes:
@@ -32,7 +33,7 @@ class TwoWayAStar(AStar):
             if first_dir_node.tile_pos == second_dir_node.tile_pos:
                 self.reached = True
                 self.meeting = first_dir_node.tile_pos
-                self.path = self.reconstruct_path(
+                self.path, self.costs = self.reconstruct_path(
                     first_dir_node, second_dir_node)
                 break
 
@@ -79,11 +80,14 @@ class TwoWayAStar(AStar):
             stdout.write("\033[0;0m")
 
     def reconstruct_path(self, f_node, s_node):
-        first_path = f_node.reconstruct_path(self.first_dir.start)
-        second_path = s_node.reconstruct_path(self.second_dir.start)
+        # Might be an issue
+        first_path, first_costs = f_node.reconstruct_path()
+        second_path, second_costs = s_node.reconstruct_path()
         first_path.reverse()
+        first_costs.reverse()
         path = first_path + second_path
-        return(path)
+        costs = first_costs + second_costs
+        return(path, costs)
 
     def path_info(self):
         if self.reached:
