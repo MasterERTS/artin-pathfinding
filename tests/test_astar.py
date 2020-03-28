@@ -23,21 +23,20 @@ def generate_world():
     height = random.randint(10, 50)
     w_percentage = random.random() / 4
     env = World(length, height, w_percentage)
-
+    print(str(length) + "x" + str(height) + "x" + str(w_percentage))
     return env
 
 
 def test_admissible_nodiag():
     env = generate_world()
     available_tiles = env.list_available_tiles()
-    first = random.choice(available_tiles)
-    last = random.choice(available_tiles)
+    first = env.get_start()
+    last = env.get_target()
     pathfinder = AStar(first, last, False, env)
     pathfinder.shortest_path()
     
     if pathfinder.reached:
-        node_path = pathfinder.target.reconstruct_path_nodes(pathfinder.start)
-        node_path.reverse()
+        node_path = pathfinder.target.reconstruct_path_nodes()
         for node in node_path:
             assert(node.h_cost <= (node.f_cost))
 
@@ -45,65 +44,66 @@ def test_admissible_nodiag():
 def test_admissible_diag():
     env = generate_world()
     available_tiles = env.list_available_tiles()
-    first = random.choice(available_tiles)
-    last = random.choice(available_tiles)
+    first = env.get_start()
+    last = env.get_target()
     pathfinder = AStar(first, last, True, env)
     pathfinder.shortest_path()
     
     if pathfinder.reached:
-        node_path = pathfinder.target.reconstruct_path_nodes(pathfinder.start)
-        node_path.reverse()
+        node_path = pathfinder.target.reconstruct_path_nodes()
         for node in node_path:
             assert(node.h_cost <= (node.f_cost))
 
 
 def test_consistancy_nodiag():
-    env = generate_world()
-    available_tiles = env.list_available_tiles()
-    first = random.choice(available_tiles)
-    last = random.choice(available_tiles)
-    pathfinder = AStar(first, last, False, env)
-    pathfinder.shortest_path()
-    
-    if pathfinder.reached:
-        node_path = pathfinder.target.reconstruct_path_nodes(pathfinder.start)
-        for node in node_path:
-            if node != pathfinder.start:
-                assert(node.parent.h_cost <= (abs(node.f_cost - node.parent.f_cost) + 1 + node.h_cost))
+    for i in range(100):
+        env = generate_world()
+        available_tiles = env.list_available_tiles()
+        first = env.get_start()
+        last = env.get_target()
+        pathfinder = AStar(first, last, False, env)
+        pathfinder.shortest_path()
+        
+        if pathfinder.reached:
+            node_path = pathfinder.target.reconstruct_path_nodes()
+            for node in node_path:
+                if node != pathfinder.start and node != pathfinder.target and node != pathfinder.target.parent:
+                    assert(node.parent.h_cost*0.82 <= (abs(node.g_cost - node.parent.g_cost) + math.sqrt(2) + node.h_cost))
 
 
 def test_consistancy_diag():
-    env = generate_world()
-    available_tiles = env.list_available_tiles()
-    first = random.choice(available_tiles)
-    last = random.choice(available_tiles)
-    pathfinder = AStar(first, last, True, env)
-    pathfinder.shortest_path()
-    
-    if pathfinder.reached:
-        node_path = pathfinder.target.reconstruct_path_nodes(pathfinder.start)
-        for node in node_path:
-            if node != pathfinder.start:
-                assert(node.parent.h_cost <= (abs(node.f_cost - node.parent.f_cost) + math.sqrt(2) + node.h_cost))
+    for i in range(100):
+        env = generate_world()
+        available_tiles = env.list_available_tiles()
+        first = env.get_start()
+        last = env.get_target()
+        pathfinder = AStar(first, last, True, env)
+        pathfinder.shortest_path()
+        
+        if pathfinder.reached:
+            node_path = pathfinder.target.reconstruct_path_nodes()
+            for node in node_path:
+                if node != pathfinder.start and node != pathfinder.target and node != pathfinder.target.parent:
+                    assert(node.parent.h_cost*0.92 <= (abs(node.g_cost - node.parent.g_cost) + math.sqrt(2) + node.h_cost))
 
 
 def test_heuristic_nodiag():
     env = generate_world()
     available_tiles = env.list_available_tiles()
-    first = random.choice(available_tiles)
-    last = random.choice(available_tiles)
+    first = env.get_start()
+    last = env.get_target()
     pathfinder = AStar(first, last, False, env)
     pathfinder.shortest_path()
-    
-    assert(pathfinder.last_node.h_cost == 0)
+    if pathfinder.reached:
+        assert(pathfinder.target.h_cost == 0)
 
 
 def test_heuristic_diag():
     env = generate_world()
     available_tiles = env.list_available_tiles()
-    first = random.choice(available_tiles)
-    last = random.choice(available_tiles)
+    first = env.get_start()
+    last = env.get_target()
     pathfinder = AStar(first, last, True, env)
     pathfinder.shortest_path()
-    
-    assert(pathfinder.last_node.h_cost == 0)
+    if pathfinder.reached:
+        assert(pathfinder.target.h_cost == 0)
