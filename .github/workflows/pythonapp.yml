@@ -36,8 +36,8 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest
-        pytest test_astar.py --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}/astar.xml --cov=com --cov-report=xml --cov-report=html
-        pytest test_nodes.py --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}/nodes.xml --cov=com --cov-report=xml --cov-report=html
+        pytest tests/test_astar.py --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}/astar.xml --cov=com --cov-report=xml --cov-report=html
+        pytest tests/test_nodes.py --doctest-modules --junitxml=junit/test-results-${{ matrix.python-version }}/nodes.xml --cov=com --cov-report=xml --cov-report=html
     
     - name: Upload ASTAR test results
       uses: actions/upload-artifact@master
