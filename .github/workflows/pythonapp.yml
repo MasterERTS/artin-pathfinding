@@ -1,10 +1,11 @@
-name: Python application
+name: github-ci
 
 on: 
   pull _request:
-    push:
-      branches:
-        master
+  
+  push:
+    branches:
+      master
 
 jobs:
   build:
