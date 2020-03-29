@@ -1,6 +1,7 @@
 import sys
 import time
 import random
+import copy
 from os import path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from lib.bidir_astar import TwoWayAStar
@@ -11,7 +12,7 @@ from lib.dfs import DepthFirstSearch
 from lib.astar import AStar
 from lib.node import Node
 from lib.world import World
-from lib.dataviz import PathfindingComparator
+from lib.dataviz import Visualizer
 
 class PathFinder():
     def __init__(self, env, diagonals=False):
@@ -19,6 +20,9 @@ class PathFinder():
         self.diagonals = diagonals
         self.start = env.get_start()
         self.target = env.get_target()
+
+        self.envShelve = {}
+        self.grids = {}
 
         self.algorithms = {
             "AStar": self.computePathAStar,
@@ -30,8 +34,6 @@ class PathFinder():
         }
 
         self.n_algorithms = len(list(self.algorithms.keys()))
-
-        env.display()
         self.__printKeyTiles(env)
 
     def __printKeyTiles(self, env):
@@ -39,12 +41,43 @@ class PathFinder():
         print(free_tiles[:10] + free_tiles[(len(free_tiles)-10):])
 
     def setEnv(self, newEnv, diagonals=False):
+        self.envShelve.remove(self.env)
         self.env = newEnv
+        
         self.start = newEnv.get_start()
         self.target = newEnv.get_target()
         self.diagonals = diagonals
-        newEnv.display()
         self.__printKeyTiles(newEnv)
+
+    def __addPathToEnv(self, path):
+        env = self.env
+        for elem in path:
+            env.w[elem] = 2
+        return env
+
+    def __addPathToDict(self, path, pathName):
+        env = copy.deepcopy(self.env)
+        for elem in path:
+            env.w[elem] = 2
+        self.envShelve[pathName] = env
+
+    def __convertEnvToGrids(self):
+        views = Visualizer()
+        for elem in self.envShelve.keys():
+            self.grids[elem] = views.convertEnvToGrid(self.envShelve[elem])
+
+    def plotPaths(self):
+        views = Visualizer()
+        self.envShelve["Environment"] = self.env
+        self.__convertEnvToGrids()
+        views.plotGrids(self.grids)
+        views.show()
+
+    def displayEnv(self):
+        views = Visualizer()
+        grid = views.convertEnvToGrid(self.env)
+        views.plotGrid(grid)
+        views.show()
 
     def computePathBFS(self):
         pathfinder = BreadthFirstSearch(
@@ -62,6 +95,8 @@ class PathFinder():
             "Path": pathfinder.path,
             "Costs": pathfinder.costs
         }
+
+        self.__addPathToDict(pathfinder.path, "BFS")
 
         return(pathInfo, final_time)
 
@@ -82,6 +117,8 @@ class PathFinder():
             "Costs": pathfinder.costs
         }
 
+        self.__addPathToDict(pathfinder.path, "DFS")
+
         return(pathInfo, final_time)
 
     def computePathSTW(self):
@@ -100,6 +137,8 @@ class PathFinder():
             "Costs": pathfinder.costs
         }
 
+        self.__addPathToDict(pathfinder.path, "STW")
+
         return(pathInfo, final_time)
 
     def computePathAStar(self):
@@ -117,6 +156,8 @@ class PathFinder():
             "Path": pathfinder.path,
             "Costs": pathfinder.costs
         }
+
+        self.__addPathToDict(pathfinder.path, "A*")
 
         return(pathInfo, final_time)
 
@@ -137,6 +178,8 @@ class PathFinder():
             "Costs": pathfinder.costs
         }
 
+        self.__addPathToDict(pathfinder.path, "Dijkstra")
+
         return(pathInfo, final_time)
 
     def computePathBidirAStar(self):
@@ -156,11 +199,13 @@ class PathFinder():
             "Costs": pathfinder.costs
         }
 
+        self.__addPathToDict(pathfinder.path, "Bidirectional A*")
+
         return(pathInfo, final_time)
 
     def benchmark(self, test_samples, lengths=True, time=False):
         env = self.env
-        views = PathfindingComparator()
+        views = Visualizer()
 
         if (not(lengths) and not(time)):
             print("Wtf ? Why do you even benchmark shit if you put all benchmark options to False ? Now you get a random one.")
@@ -225,6 +270,3 @@ class PathFinder():
                         views.addFigure(3, fig_title)
 
         views.show()
-
-    def displayPath(self, path):
-        self.env.display_path(path)
