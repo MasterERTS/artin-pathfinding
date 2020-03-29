@@ -40,10 +40,12 @@ class TwoWayAStar(AStar):
 
             elif (first_dir_node == self.first_dir.target):
                 self.first_dir_reached = True
+                self.first_dir.target = first_dir_node
                 break
 
             elif(second_dir_node == self.second_dir.target):
                 self.second_dir_reached = True
+                self.second_dir.target = second_dir_node
                 break
 
             else:
