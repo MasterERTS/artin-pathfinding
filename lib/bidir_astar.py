@@ -13,7 +13,7 @@ from lib.astar import AStar
 from sys import stdout
 
 
-class TwoWayAStar(AStar):
+class TwoWayAStar():
     def __init__(self, start, target, allow_diagonals, World):
         self.first_dir = AStar(start, target, allow_diagonals, World)
         self.second_dir = AStar(target, start, allow_diagonals, World)
@@ -84,7 +84,7 @@ class TwoWayAStar(AStar):
                     elif second_s_node not in self.second_dir.closed_nodes:
                         self.second_dir.open_nodes.append(second_s_node)
 
-        if not(self.reached):
+        if not(self.reached or self.first_dir_reached or self.second_dir_reached):
             stdout.write("\033[;1m" + "\033[1;31m")
             stdout.write(
                 '========================! NO PATH FOUND !=========================')
@@ -97,7 +97,7 @@ class TwoWayAStar(AStar):
 
         elif self.first_dir_reached:
             self.path, self.costs = self.first_dir.target.reconstruct_path()
-        
+
         elif self.second_dir_reached:
             self.path, self.costs = self.second_dir.target.reconstruct_path()
 
