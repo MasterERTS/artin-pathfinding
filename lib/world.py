@@ -76,6 +76,8 @@ class World:
                 break
         return(target_tile)
 
+    
+
     def neighbours(self, i):
         if i < 0 or i >= self.L * self.H or self.w[i] == 1:
             # i is an incorrect tile number (outside the array or on a wall)
