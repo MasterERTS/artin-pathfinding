@@ -13,38 +13,41 @@ import sys
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from lib.world import World
 
+def computeCostBasedAlg(pathfinder):
+    path, time = pathfinder.computePathAStar()
+    path1, time1 = pathfinder.computePathBidirAStar()
+    path2, time2 = pathfinder.computePathDijkstra()
+    path, time = pathfinder.computePathDFS()
+    path1, time1 = pathfinder.computePathBFS()
+    path2, time2 = pathfinder.computePathSTW()
+    
+    pathfinder.plotPaths()
+
 def computeAndDisplayAStar(pathfinder):
     path, time = pathfinder.computePathAStar()
-    pathfinder.displayPath(path["Path"])
-    print(path["Costs"])
-    print("\n Total Cost = " + str(path["Costs"][-1]))
+    pathfinder.plotPaths()
 
 def computeAndDisplayDijkstra(pathfinder):
     path, time = pathfinder.computePathDijkstra()
-    pathfinder.displayPath(path["Path"])
-    print(path["Costs"])
-    print("\n Total Cost = " + str(path["Costs"][-1]))
+    pathfinder.plotPaths()
 
 def computeAndDisplayDFS(pathfinder):
     path, time = pathfinder.computePathDFS()
-    pathfinder.displayPath(path["Path"])
-    print(path["Costs"])
-    print("\n Total Cost = " + str(path["Costs"][-1]))
-
+    pathfinder.displayEnv()
+    
 def computeAndDisplayBidirAStar(pathfinder):
     path, time = pathfinder.computePathBidirAStar()
-    pathfinder.displayPath(path["Path"])
-    print('')
-    print(path["Costs"])
-    print("\n Total Cost = " + str(path["Costs"][-1]))
+    pathfinder.plotPaths()
 
 def showComparisonPlots(pathfinder, test_samples):
     pathfinder_api.benchmark(test_samples, True, True)
 
 if __name__ == "__main__":
-    env = World(20, 20, 0.25)
+    env = World(70, 70, 0.25)
     pathfinder_api = PathFinder(env, True)
-    showComparisonPlots(pathfinder_api, 10)
+    computeCostBasedAlg(pathfinder_api)
+    #pathfinder_api.displayEnvFigure()
+    #showComparisonPlots(pathfinder_api, 20)
     #computeAndDisplayDFS(pathfinder_api)
     #computeAndDisplayAStar(pathfinder_api)
     #computeAndDisplayDijkstra(pathfinder_api)
