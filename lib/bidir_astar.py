@@ -19,6 +19,8 @@ class TwoWayAStar(AStar):
         self.second_dir = AStar(target, start, allow_diagonals, World)
 
         self.reached = False
+        self.first_dir_reached = False
+        self.second_dir_reached = False
 
         self.path = self.first_dir.path
         self.costs = self.first_dir.costs
@@ -34,6 +36,14 @@ class TwoWayAStar(AStar):
                 self.reached = True
                 self.f_meeting = first_dir_node
                 self.s_meeting = second_dir_node
+                break
+
+            elif (first_dir_node == self.first_dir.target):
+                self.first_dir_reached = True
+                break
+
+            elif(second_dir_node == self.second_dir.target):
+                self.second_dir_reached = True
                 break
 
             else:
@@ -80,7 +90,14 @@ class TwoWayAStar(AStar):
 
     def compute_paths(self):
         if self.reached:
-            self.path, self.costs = self.reconstruct_path(self.f_meeting, self.s_meeting)
+            self.path, self.costs = self.reconstruct_path(
+                self.f_meeting, self.s_meeting)
+
+        elif self.first_dir_reached:
+            self.path, self.costs = self.first_dir.target.reconstruct_path()
+        
+        elif self.second_dir_reached:
+            self.path, self.costs = self.second_dir.target.reconstruct_path()
 
     def reconstruct_path(self, f_node, s_node):
         # Might be an issue
