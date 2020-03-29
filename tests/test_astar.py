@@ -69,7 +69,7 @@ def test_consistancy_nodiag():
             for node in node_path:
                 if node != pathfinder.start and node != pathfinder.target and node != pathfinder.target.parent:
                     cost_a_b = abs(node.g_cost - node.parent.g_cost)
-                    assert(node.parent.h_cost*0.80 <= ( cost_a_b + 2 + node.h_cost))
+                    assert(node.parent.h_cost*0.9999 <= ( cost_a_b + node.h_cost))
 
 
 def test_consistancy_diag():
@@ -86,7 +86,7 @@ def test_consistancy_diag():
             for node in node_path:
                 if node != pathfinder.start and node != pathfinder.target and node != pathfinder.target.parent:
                     cost_a_b = abs(node.g_cost - node.parent.g_cost)
-                    assert(node.parent.h_cost*0.80 <= ( cost_a_b + 2 + node.h_cost))
+                    assert(node.parent.h_cost*0.9999 <= ( cost_a_b + node.h_cost))
 
 
 def test_heuristic_nodiag():
