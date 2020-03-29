@@ -15,9 +15,9 @@ class Dijkstra():
 
     def __init__(self, start, target, allow_diagonals, World):
         self.start = Node(start, target, 0, None, World,
-                          False, allow_diagonals, True)
+                          False, allow_diagonals)
         self.target = Node(target, target, -1, None, World,
-                           False, allow_diagonals, True)
+                           False, allow_diagonals)
 
         self.open_nodes = [self.start]
         self.closed_nodes = []
@@ -33,14 +33,14 @@ class Dijkstra():
             stdout.write("\033[0;0m")
             start = int(input("New START Tile --->  "))
             self.start = Node(start, target, 0, None, World,
-                              False, allow_diagonals, True)
+                              False, allow_diagonals)
         while (not(self.target.is_accessible())):
             stdout.write("\033[;1m" + "\033[1;31m")
             stdout.write('TARGET Tile have no children, choose another one ! ')
             stdout.write("\033[0;0m")
             target = int(input("New TARGET Tile --->  "))
-            self.target = Node(target, target, 0, None, World,
-                               False, allow_diagonals, True)
+            self.target = Node(target, target, -1, None, World,
+                               False, allow_diagonals)
 
         self.path = [self.start.tile_pos]
         self.costs = [0]
@@ -48,7 +48,7 @@ class Dijkstra():
     def shortest_path(self):
         while self.open_nodes:
             self.open_nodes.sort()  # use __lt__ to sort f values
-            current_node = self.open_nodes[0]
+            current_node = self.open_nodes.pop(0)
 
             if current_node == self.target:
                 self.reached = True
@@ -56,7 +56,7 @@ class Dijkstra():
                 break
 
             else:
-                self.closed_nodes.append(self.open_nodes.pop(0))
+                self.closed_nodes.append(current_node)
 
                 # get successors (depending on allow_diagonals constructor parameter)
                 successors = current_node.successors()

@@ -9,45 +9,24 @@ from lib.world import World
 from math import sqrt
 
 class Node:
-    def __init__(self, tile_pos, target, g_cost, parent, World, is_astar=None, diagonals=None, final_node=None):
+    def __init__(self, tile_pos, target, g_cost, parent, World, is_astar=False, diagonals=False):
         self.tile_pos = tile_pos
         self.g_cost = g_cost
         self.target = target
         self.diagonals = diagonals
-        self.final_node = final_node
         self.parent = parent
         self.world = World
+        self.diagonals = diagonals
 
-        if (is_astar == None):
+        if is_astar:
+            self.is_astar = True
+            self.h_cost = self.calculate_heuristic()
+        else:
             self.is_astar = False
             self.h_cost = 0
-        else:
-            self.is_astar = is_astar
-            if is_astar:
-                self.h_cost = self.calculate_heuristic()
-            else:
-                self.h_cost = 0
-
         self.f_cost = self.g_cost + self.h_cost
 
-        if final_node == None:
-            if self.target == self.tile_pos:
-                self.final_node = True
-            else:
-                pass
-        else:
-            if final_node:
-                self.final_node = True
-            elif final_node == False:
-                self.final_node = False
-
-        if diagonals == None:
-            self.diagonals = False
-        else:
-            self.diagonals = diagonals
-
     # should slightly correct node pos of start or target if they're not available
-
     def correct_pos(self):
         pass
 
@@ -88,10 +67,10 @@ class Node:
             for elem in successors:
                 if elem == (i-1) or elem == (i+1) or elem == (i - self.world.L) or elem == (i + self.world.L):
                     children_nodes.append(Node(elem, self.target, self.g_cost + 1, self, self.world,
-                                   self.is_astar, self.diagonals, self.final_node))
+                                   self.is_astar, self.diagonals))
                 else:
                     children_nodes.append(Node(elem, self.target, self.g_cost + sqrt(2), self, self.world,
-                                   self.is_astar, self.diagonals, self.final_node))
+                                   self.is_astar, self.diagonals))
             return children_nodes
 
         else:
@@ -101,7 +80,7 @@ class Node:
                                                                       i - self.world.L,
                                                                       i + self.world.L]))
             children_nodes = [Node(elem, self.target, self.g_cost + 1, self, self.world,
-                                   self.is_astar, self.diagonals, self.final_node) for elem in successors]
+                                   self.is_astar, self.diagonals) for elem in successors]
             return children_nodes
 
     def is_accessible(self, name=None):

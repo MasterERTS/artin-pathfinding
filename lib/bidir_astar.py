@@ -13,12 +13,14 @@ from lib.astar import AStar
 from sys import stdout
 
 
-class TwoWayAStar(AStar):
+class TwoWayAStar():
     def __init__(self, start, target, allow_diagonals, World):
         self.first_dir = AStar(start, target, allow_diagonals, World)
         self.second_dir = AStar(target, start, allow_diagonals, World)
 
         self.reached = False
+        self.first_dir_reached = False
+        self.second_dir_reached = False
 
         self.path = self.first_dir.path
         self.costs = self.first_dir.costs
@@ -34,6 +36,16 @@ class TwoWayAStar(AStar):
                 self.reached = True
                 self.f_meeting = first_dir_node
                 self.s_meeting = second_dir_node
+                break
+
+            elif (first_dir_node == self.first_dir.target):
+                self.first_dir_reached = True
+                self.first_dir.target = first_dir_node
+                break
+
+            elif(second_dir_node == self.second_dir.target):
+                self.second_dir_reached = True
+                self.second_dir.target = second_dir_node
                 break
 
             else:
@@ -72,7 +84,7 @@ class TwoWayAStar(AStar):
                     elif second_s_node not in self.second_dir.closed_nodes:
                         self.second_dir.open_nodes.append(second_s_node)
 
-        if not(self.reached):
+        if not(self.reached or self.first_dir_reached or self.second_dir_reached):
             stdout.write("\033[;1m" + "\033[1;31m")
             stdout.write(
                 '========================! NO PATH FOUND !=========================')
@@ -80,7 +92,14 @@ class TwoWayAStar(AStar):
 
     def compute_paths(self):
         if self.reached:
-            self.path, self.costs = self.reconstruct_path(self.f_meeting, self.s_meeting)
+            self.path, self.costs = self.reconstruct_path(
+                self.f_meeting, self.s_meeting)
+
+        elif self.first_dir_reached:
+            self.path, self.costs = self.first_dir.target.reconstruct_path()
+
+        elif self.second_dir_reached:
+            self.path, self.costs = self.second_dir.target.reconstruct_path()
 
     def reconstruct_path(self, f_node, s_node):
         # Might be an issue

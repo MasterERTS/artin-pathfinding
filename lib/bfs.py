@@ -16,9 +16,9 @@ class BreadthFirstSearch():
 
     def __init__(self, start, target, allow_diagonals, World):
         self.start = Node(start, target, 0, None, World,
-                          False, allow_diagonals, True)
+                          False, allow_diagonals)
         self.target = Node(target, target, 0, None, World,
-                           False, allow_diagonals, True)
+                           False, allow_diagonals)
         self.reached = False
         self.queue = [self.start]
         self.visited = []

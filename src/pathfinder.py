@@ -3,15 +3,15 @@ import time
 import random
 from os import path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-from lib.dataviz import PathfindingComparator
-from lib.world import World
-from lib.node import Node
-from lib.astar import AStar
-from lib.dfs import DepthFirstSearch
-from lib.stw import SpanningTreeWalk
-from lib.bfs import BreadthFirstSearch
-from lib.dijkstra import Dijkstra
 from lib.bidir_astar import TwoWayAStar
+from lib.dijkstra import Dijkstra
+from lib.bfs import BreadthFirstSearch
+from lib.stw import SpanningTreeWalk
+from lib.dfs import DepthFirstSearch
+from lib.astar import AStar
+from lib.node import Node
+from lib.world import World
+from lib.dataviz import PathfindingComparator
 
 class PathFinder():
     def __init__(self, env, diagonals=False):
@@ -19,6 +19,17 @@ class PathFinder():
         self.diagonals = diagonals
         self.start = env.get_start()
         self.target = env.get_target()
+
+        self.algorithms = {
+            "AStar": self.computePathAStar,
+            "Dijkstra": self.computePathDijkstra,
+            "BidirAStar": self.computePathBidirAStar,
+            "DFS": self.computePathDFS,
+            "BFS": self.computePathBFS,
+            "SpanningTree": self.computePathSTW
+        }
+
+        self.n_algorithms = len(list(self.algorithms.keys()))
 
         env.display()
         self.__printKeyTiles(env)
@@ -36,10 +47,11 @@ class PathFinder():
         self.__printKeyTiles(newEnv)
 
     def computePathBFS(self):
-        init_time = time.clock()
-
         pathfinder = BreadthFirstSearch(
             self.start, self.target, self.diagonals, self.env)
+
+        init_time = time.clock()
+
         pathfinder.shortest_path()
 
         final_time = time.clock() - init_time
@@ -54,10 +66,11 @@ class PathFinder():
         return(pathInfo, final_time)
 
     def computePathDFS(self):
-        init_time = time.clock()
-
         pathfinder = DepthFirstSearch(
             self.start, self.target, self.diagonals, self.env)
+
+        init_time = time.clock()
+
         pathfinder.shortest_path()
 
         final_time = time.clock() - init_time
@@ -72,10 +85,10 @@ class PathFinder():
         return(pathInfo, final_time)
 
     def computePathSTW(self):
-        init_time = time.clock()
-
         pathfinder = SpanningTreeWalk(
             self.start, self.target, self.diagonals, self.env)
+        init_time = time.clock()
+
         pathfinder.shortest_path()
 
         final_time = time.clock() - init_time
@@ -90,9 +103,10 @@ class PathFinder():
         return(pathInfo, final_time)
 
     def computePathAStar(self):
+        pathfinder = AStar(self.start, self.target, self.diagonals, self.env)
+
         init_time = time.clock()
 
-        pathfinder = AStar(self.start, self.target, self.diagonals, self.env)
         pathfinder.shortest_path()
 
         final_time = time.clock() - init_time
@@ -107,10 +121,11 @@ class PathFinder():
         return(pathInfo, final_time)
 
     def computePathDijkstra(self):
-        init_time = time.clock()
-
         pathfinder = Dijkstra(self.start, self.target,
                               self.diagonals, self.env)
+
+        init_time = time.clock()
+
         pathfinder.shortest_path()
 
         final_time = time.clock() - init_time
@@ -125,10 +140,11 @@ class PathFinder():
         return(pathInfo, final_time)
 
     def computePathBidirAStar(self):
-        init_time = time.clock()
-
         pathfinder = TwoWayAStar(
             self.start, self.target, self.diagonals, self.env)
+
+        init_time = time.clock()
+
         pathfinder.shortest_path()
 
         final_time = time.clock() - init_time
@@ -158,83 +174,55 @@ class PathFinder():
                 time = True
 
         if lengths:
-            pathList_astar = []
-            pathList_bidir = []
-            pathList_dfs = []
-            pathList_bfs = []
-            pathList_stw = []
-            pathList_dij = []
+            costLists = {}
+            for alg in self.algorithms.keys():
+                costLists[alg] = []
 
         if time:
-            timeList_astar = []
-            timeList_bidir = []
-            timeList_dfs = []
-            timeList_bfs = []
-            timeList_stw = []
-            timeList_dij = []
+            timeLists = {}
+            for alg in self.algorithms.keys():
+                timeLists[alg] = []
 
         for i in range(test_samples):
-            self.env.display()
+            if self.env.L * self.env.H < 100000:
+                self.env.display()
 
             # Computation
-            path_astar, time_astar = self.computePathAStar()
-            path_bidir, time_bidir = self.computePathBidirAStar()
-            path_dfs, time_dfs = self.computePathDFS()
-            path_bfs, time_bfs = self.computePathBFS()
-            path_stw, time_stw = self.computePathSTW()
-            path_dij, time_dij = self.computePathDijkstra()
-
-            # Get all Paths for Comparison
-            if lengths:
-                pathList_astar.append(path_astar["Costs"][-1])
-                pathList_bidir.append(path_bidir["Costs"][-1])
-                pathList_dfs.append(path_dfs["Costs"][-1])
-                pathList_bfs.append(path_bfs["Costs"][-1])
-                pathList_stw.append(path_stw["Costs"][-1])
-                pathList_dij.append(path_dij["Costs"][-1])
-
-            # Get all Times for Comparison
-            if time:
-                timeList_astar.append(time_astar)
-                timeList_bidir.append(time_bidir)
-                timeList_dfs.append(time_dfs)
-                timeList_bfs.append(time_bfs)
-                timeList_stw.append(time_stw)
-                timeList_dij.append(time_dij)
+            for alg in self.algorithms.keys():
+                path, time = self.algorithms[alg]()
+                costLists[alg].append(path["Costs"][-1])
+                timeLists[alg].append(time)
+                print(alg + " successfully computed.")
 
             self.setEnv(World(env.L, env.H, env.pWalls), self.diagonals)
 
         if lengths:
             fig_title = "Cost Comparison"
             views.addFigure(3, fig_title)
-            views.addPlotToAxs(pathList_astar, fig_title, 0, "AStar")
-            views.addPlotToAxs(pathList_dij, fig_title, 1, "Dijkstra")
-            views.addPlotToAxs(pathList_bidir, fig_title,
-                               2, "Bidirectional AStar")
-
-            views.addFigure(3, fig_title)
-            views.addPlotToAxs(pathList_dfs, fig_title,
-                               0, "Depth-First Search")
-            views.addPlotToAxs(pathList_bfs, fig_title,
-                               1, "Breadth-First Search")
-            views.addPlotToAxs(pathList_stw, fig_title,
-                               2, "Spanning Tree Walk")
+            i = 0
+            k = 0
+            for alg in self.algorithms.keys():
+                views.addPlotToAxs(costLists[alg], fig_title, i, alg)
+                i += 1
+                k += 1
+                if i > 2:
+                    i = 0
+                    if k < len(list(self.algorithms.keys())):
+                        views.addFigure(3, fig_title)
 
         if time:
             fig_title = "Computation Time Comparison"
             views.addFigure(3, fig_title)
-            views.addPlotToAxs(timeList_astar, fig_title, 0, "AStar")
-            views.addPlotToAxs(timeList_dij, fig_title, 1, "Dijkstra")
-            views.addPlotToAxs(timeList_bidir, fig_title,
-                               2, "Bidirectional AStar")
-
-            views.addFigure(3, fig_title)
-            views.addPlotToAxs(timeList_dfs, fig_title,
-                               0, "Depth-First Search")
-            views.addPlotToAxs(timeList_bfs, fig_title,
-                               1, "Breadth-First Search")
-            views.addPlotToAxs(timeList_stw, fig_title,
-                               2, "Spanning Tree Walk")
+            i = 0
+            k = 0
+            for alg in self.algorithms.keys():
+                views.addPlotToAxs(timeLists[alg], fig_title, i, alg)
+                i += 1
+                k += 1
+                if i > 2:
+                    i = 0
+                    if k < len(list(self.algorithms.keys())):
+                        views.addFigure(3, fig_title)
 
         views.show()
 

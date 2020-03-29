@@ -18,7 +18,7 @@ class PathfindingComparator():
 
     def addFigure(self, nplots, suptitle):
         self.figs[suptitle], self.axs[suptitle] = plt.subplots(
-            nplots, sharex=True, sharey=True)
+            nplots, figsize=(10, 7), dpi=80, sharex=True, sharey=True)
         self.figs[suptitle].suptitle(suptitle)
         self.axs_available[suptitle] = [elem for elem in range(nplots)]
         self.figs_flags[suptitle] = True
