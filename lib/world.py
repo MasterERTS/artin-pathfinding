@@ -63,6 +63,7 @@ class World:
                 continue
             else:
                 break
+        self.w[start_tile] = 2
         return(start_tile)
 
     def get_target(self):
@@ -145,6 +146,10 @@ class World:
                 elif self.w[i * self.L + j] == 1:
                     stdout.write("\033[;1m" + "\033[1;31m")
                     stdout.write('█')
+                    stdout.write("\033[0;0m")
+                elif self.w[i * self.L + j] == 2:
+                    stdout.write("\033[0;32m")
+                    stdout.write('¤')
                     stdout.write("\033[0;0m")
 
             print('')
