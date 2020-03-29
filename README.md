@@ -1,4 +1,4 @@
-![Python application](https://github.com/master-coro/artin-pathfinding/workflows/Python%20application/badge.svg)
+![github-ci](https://github.com/master-coro/artin-pathfinding/workflows/github-ci/badge.svg)
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
