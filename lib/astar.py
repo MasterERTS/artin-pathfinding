@@ -16,9 +16,9 @@ class AStar():
 
     def __init__(self, start, target, allow_diagonals, World):
         self.start = Node(start, target, 0, None, World,
-                          True, allow_diagonals, True)
+                          True, allow_diagonals)
         self.target = Node(target, target, -1, None, World,
-                           True, allow_diagonals, True)
+                           True, allow_diagonals)
 
         self.open_nodes = [self.start]
         self.closed_nodes = []
@@ -49,7 +49,7 @@ class AStar():
     def shortest_path(self):
         while self.open_nodes:
             self.open_nodes.sort()  # use __lt__ to sort f values
-            current_node = self.open_nodes[0]
+            current_node = self.open_nodes.pop(0)
 
             if current_node == self.target:
                 self.reached = True
@@ -57,7 +57,7 @@ class AStar():
                 break
 
             else:
-                self.closed_nodes.append(self.open_nodes.pop(0))
+                self.closed_nodes.append(current_node)
 
                 # get successors (depending on allow_diagonals constructor parameter)
                 successors = current_node.successors()

@@ -16,9 +16,9 @@ class DepthFirstSearch():
 
     def __init__(self, start, target, allow_diagonals, World):
         self.start = Node(start, target, 0, None, World,
-                          False, allow_diagonals, True)
+                          False, allow_diagonals)
         self.target = Node(target, target, 0, None, World,
-                           False, allow_diagonals, True)
+                           False, allow_diagonals)
         self.reached = False
         self.stack = [self.start]
         self.visited = []
@@ -49,7 +49,6 @@ class DepthFirstSearch():
                 self.visited.append(current_node)
                 if self.target == current_node:
                     self.reached = True
-                    self.target = current_node
                     break
 
                 successors = current_node.successors()
