@@ -174,24 +174,14 @@ class PathFinder():
                 time = True
 
         if lengths:
-            costLists = {
-                "AStar": [],
-                "Dijkstra": [],
-                "BidirAStar": [],
-                "DFS": [],
-                "BFS": [],
-                "SpanningTree": []
-            }
+            costLists = {}
+            for alg in self.algorithms.keys():
+                costLists[alg] = []
 
         if time:
-            timeLists = {
-                "AStar": [],
-                "Dijkstra": [],
-                "BidirAStar": [],
-                "DFS": [],
-                "BFS": [],
-                "SpanningTree": []
-            }
+            timeLists = {}
+            for alg in self.algorithms.keys():
+                timeLists[alg] = []
 
         for i in range(test_samples):
             if self.env.L * self.env.H < 100000:
@@ -210,23 +200,29 @@ class PathFinder():
             fig_title = "Cost Comparison"
             views.addFigure(3, fig_title)
             i = 0
+            k = 0
             for alg in self.algorithms.keys():
                 views.addPlotToAxs(costLists[alg], fig_title, i, alg)
                 i += 1
+                k += 1
                 if i > 2:
                     i = 0
-                    views.addFigure(3, fig_title)
+                    if k < len(list(self.algorithms.keys())):
+                        views.addFigure(3, fig_title)
 
         if time:
             fig_title = "Computation Time Comparison"
             views.addFigure(3, fig_title)
             i = 0
+            k = 0
             for alg in self.algorithms.keys():
                 views.addPlotToAxs(timeLists[alg], fig_title, i, alg)
                 i += 1
+                k += 1
                 if i > 2:
                     i = 0
-                    views.addFigure(3, fig_title)
+                    if k < len(list(self.algorithms.keys())):
+                        views.addFigure(3, fig_title)
 
         views.show()
 
