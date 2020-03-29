@@ -31,9 +31,9 @@ class Node:
         pass
 
     def calculate_heuristic(self):
-        row_current = int(self.tile_pos / self.world.H)
+        row_current = int(self.tile_pos / self.world.L)
         col_current = self.tile_pos % self.world.L
-        row_target = int(self.target / self.world.H)
+        row_target = int(self.target / self.world.L)
         col_target = self.target % self.world.L
 
         dy = abs(row_current - row_target)
