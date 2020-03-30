@@ -6,6 +6,7 @@
 '''
 
 from lib.world import World
+import random
 from math import sqrt
 
 class Node:
@@ -64,6 +65,7 @@ class Node:
                                                                       i + self.world.L + 1]))
 
             children_nodes = []
+            random.shuffle(successors)
             for elem in successors:
                 if elem == (i-1) or elem == (i+1) or elem == (i - self.world.L) or elem == (i + self.world.L):
                     children_nodes.append(Node(elem, self.target, self.g_cost + 1, self, self.world,
@@ -79,6 +81,7 @@ class Node:
                                                                       i + 1,
                                                                       i - self.world.L,
                                                                       i + self.world.L]))
+            random.shuffle(successors)
             children_nodes = [Node(elem, self.target, self.g_cost + 1, self, self.world,
                                    self.is_astar, self.diagonals) for elem in successors]
             return children_nodes

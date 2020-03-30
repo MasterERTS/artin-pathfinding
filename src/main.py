@@ -43,9 +43,12 @@ def showComparisonPlots(pathfinder, test_samples):
     pathfinder_api.benchmark(test_samples, True, True)
 
 if __name__ == "__main__":
-    env = World(70, 70, 0.25)
-    pathfinder_api = PathFinder(env, True)
-    computeCostBasedAlg(pathfinder_api)
+    env = World(filename="worlds/colliders.csv")
+    _start = 25 * env.L + 100
+    _goal = 750* env.L + 370
+    pathfinder_api = PathFinder(env)
+    pathfinder_api.computePathAStar()
+    pathfinder_api.plotPaths()
     #pathfinder_api.displayEnvFigure()
     #showComparisonPlots(pathfinder_api, 20)
     #computeAndDisplayDFS(pathfinder_api)

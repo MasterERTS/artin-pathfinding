@@ -12,6 +12,7 @@
 from random import random
 from sys import stdout
 import os
+import numpy as np
 import time
 
 
@@ -20,30 +21,78 @@ class World:
     # L is the number of columns
     # H is the number of lines
     # P is the probability of having a wall in a given tile
-    def __init__(self, L, H, P):
-        self.L = L
-        self.H = H
-        self.pWalls = P
+    def __init__(self, L=20, H=20, P=.1, filename=None):
+        self.filename = filename
+        if filename == None:
+            self.L = L
+            self.H = H
+            self.pWalls = P
 
-        # the world is represented by an array with one dimension
-        self.w = [0 for i in range(L*H)]  # initialise every tile to empty (0)
+            # the world is represented by an array with one dimension
+            # initialise every tile to empty (0)
+            self.w = [0 for i in range(L*H)]
 
-        # add walls in the first and last columns
-        for i in range(H):
-            self.w[i*L] = 1
-            self.w[i*L+L-1] = 1
+            # add walls in the first and last columns
+            for i in range(H):
+                self.w[i*L] = 1
+                self.w[i*L+L-1] = 1
 
-        # add walls in the first and last lines
-        for j in range(L):
-            self.w[j] = 1
-            self.w[(H-1)*L + j] = 1
-
-        for i in range(H):
+            # add walls in the first and last lines
             for j in range(L):
-                # add a wall in this tile with probability P and provided that it is neither
-                # the starting tile nor the goal tile
-                if random() < P and not (i == 1 and j == 1) and not (i == H-2 and j == L-2):
-                    self.w[i*L+j] = 1
+                self.w[j] = 1
+                self.w[(H-1)*L + j] = 1
+
+            for i in range(H):
+                for j in range(L):
+                    # add a wall in this tile with probability P and provided that it is neither
+                    # the starting tile nor the goal tile
+                    if random() < P and not (i == 1 and j == 1) and not (i == H-2 and j == L-2):
+                        self.w[i*L+j] = 1
+        else:
+            data = np.loadtxt(filename, delimiter=',',
+                              dtype='Float64', skiprows=2)
+
+            safety_distance = 1
+            drone_altitude = 2
+
+            # minimum and maximum north coordinates
+            north_min = np.floor(np.min(data[:, 0] - data[:, 3]))
+            north_max = np.ceil(np.max(data[:, 0] + data[:, 3]))
+
+            # minimum and maximum east coordinates
+            east_min = np.floor(np.min(data[:, 1] - data[:, 4]))
+            east_max = np.ceil(np.max(data[:, 1] + data[:, 4]))
+
+            # given the minimum and maximum coordinates we can
+            # calculate the size of the grid.
+            north_size = int(np.ceil(north_max - north_min))
+            east_size = int(np.ceil(east_max - east_min))
+            # Initialize an empty grid
+            grid = np.zeros((north_size, east_size))
+
+            # Populate the grid with obstacles
+            for i in range(data.shape[0]):
+                north, east, alt, d_north, d_east, d_alt = data[i, :]
+                if alt + d_alt + safety_distance > drone_altitude:
+                    obstacle = [
+                        int(np.clip(north - d_north - safety_distance -
+                                    north_min, 0, north_size-1)),
+                        int(np.clip(north + d_north + safety_distance -
+                                    north_min, 0, north_size-1)),
+                        int(np.clip(east - d_east - safety_distance -
+                                    east_min, 0, east_size-1)),
+                        int(np.clip(east + d_east + safety_distance -
+                                    east_min, 0, east_size-1)),
+                    ]
+
+                    grid[obstacle[0]:obstacle[1]+1,
+                         obstacle[2]:obstacle[3]+1] = 1
+            np.flip(grid, 0)
+            self.grid = np.pad(grid, pad_width=1,
+                               mode='constant', constant_values=1)
+            self.L = self.grid.shape[1]
+            self.H = self.grid.shape[0] 
+            self.w = self.grid.flatten()
 
     # return list of available tiles
 
@@ -77,8 +126,6 @@ class World:
                 break
         return(target_tile)
 
-    
-
     def neighbours(self, i):
         if i < 0 or i >= self.L * self.H or self.w[i] == 1:
             # i is an incorrect tile number (outside the array or on a wall)
@@ -87,9 +134,9 @@ class World:
         else:
             # look in the four adjacent tiles and keep only those with no wall
             successors = list(filter(lambda x: self.w[x] != 1, [i - 1,
-                                                                    i + 1,
-                                                                    i - self.L,
-                                                                    i + self.L]))
+                                                                i + 1,
+                                                                i - self.L,
+                                                                i + self.L]))
             return successors
 
         '''if self.diagonals == True:
