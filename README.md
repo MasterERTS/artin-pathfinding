@@ -8,7 +8,7 @@
 
 <br />
 <p align="center">
-    <img src="https://raw.githubusercontent.com/master-coro/artin-pathfinding/master/images/pathfinder.png">                            
+    <img src="images/pathfinder.png" alt="Logo" width="468" height="463">                           
 </a>
 
   <h3 align="center">PathFinding API</h3>
@@ -46,7 +46,7 @@ Here is a comparison of paths' length for each implemented algorithms. ( 0 means
 It also shows stability and displays a certain trust factors for some that others may not have.
 
 <p align="center">
-    <img src="images/path_lengths.png" alt="Logo" width="800" height="300">
+    <img src="images/path_lengths.png" alt="graph" width="800" height="300">
   </a>
 </p>
 <br />
