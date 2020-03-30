@@ -15,11 +15,24 @@ from lib.world import World
 from lib.dataviz import Visualizer
 
 class PathFinder():
-    def __init__(self, env, diagonals=False):
+    def __init__(self, env, autostart=True, diagonals=False, start=None, target=None):
         self.env = env
         self.diagonals = diagonals
-        self.start = env.get_start()
-        self.target = env.get_target()
+
+        if start != None and target != None:
+            self.start = start
+            self.target = target    
+            self.env.w[self.start] = 2      
+        
+        elif autostart:
+            self.start = env.get_start()
+            self.target = env.get_target()
+        
+        else:
+            self.__printKeyTiles(env)
+            self.start = int(input("Enter START tile position"))
+            self.target = int(input("Enter TARGET tile position"))
+            self.env.w[self.start] = 2
 
         self.envShelve = {}
         self.grids = {}
@@ -43,7 +56,7 @@ class PathFinder():
     def setEnv(self, newEnv, diagonals=False):
         self.envShelve.remove(self.env)
         self.env = newEnv
-        
+        self.env.w[self.start] = 2
         self.start = newEnv.get_start()
         self.target = newEnv.get_target()
         self.diagonals = diagonals
