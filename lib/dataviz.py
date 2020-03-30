@@ -1,12 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-
 class Visualizer():
     def __init__(self):
         self.subplots_n = 0
         self.env_ploted = 0
-
+        
         self.plots = dict()
         self.figs = dict()
         self.axs = dict()

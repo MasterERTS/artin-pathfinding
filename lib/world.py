@@ -22,6 +22,7 @@ class World:
     # H is the number of lines
     # P is the probability of having a wall in a given tile
     def __init__(self, L=20, H=20, P=.1, filename=None):
+        self.dim = 2
         self.filename = filename
         if filename == None:
             self.L = L
