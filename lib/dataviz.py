@@ -34,8 +34,8 @@ class Visualizer():
         grid_dict.pop("Environment")
 
         # Plot Pathfinders
-        plt.rcParams["figure.figsize"] = [12, 12]
-        fig = plt.figure("PathFinders")
+        plt.rcParams["figure.figsize"] = [12, 5]
+        fig2 = plt.figure("PathFinders")
         graph_per_rows = int(len(list(grid_dict.keys())))
         ind_col = 0
         ind_rows = 0
@@ -44,7 +44,7 @@ class Visualizer():
             if ind_col % graph_per_rows == 0:
                 ind_rows += 1
                 ind_col = 0
-            a = fig.add_subplot(ind_rows, graph_per_rows, ind_col+1)
+            a = fig2.add_subplot(ind_rows, graph_per_rows, ind_col+1)
             grid = grid_dict[pltKeys]
             plt.imshow(grid)
             a.set_title(pltKeys)
