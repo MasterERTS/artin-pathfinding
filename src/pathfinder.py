@@ -49,6 +49,8 @@ class PathFinder():
         self.n_algorithms = len(list(self.algorithms.keys()))
         self.__printKeyTiles(env)
 
+        #self.displayEnv()
+
     def __printKeyTiles(self, env):
         free_tiles = env.list_available_tiles()
         print(free_tiles[:10] + free_tiles[(len(free_tiles)-10):])
@@ -216,6 +218,31 @@ class PathFinder():
 
         return(pathInfo, final_time)
 
+    def runAll(self, n_times):
+        env = self.env
+
+        costLists = {}
+        for alg in self.algorithms.keys():
+            costLists[alg] = []
+
+        timeLists = {}
+        for alg in self.algorithms.keys():
+            timeLists[alg] = []
+
+        for i in range(n_times):
+            # Computation
+            for alg in self.algorithms.keys():
+                path, time = self.algorithms[alg]()
+                costLists[alg].append(path["Costs"][-1])
+                timeLists[alg].append(time)
+                print(alg + " successfully computed.")
+
+            self.setEnv(World(env.L, env.H, env.pWalls), self.diagonals)
+
+        self.plotPaths()
+        
+        return costLists, timeLists
+
     def benchmark(self, test_samples, lengths=True, time=False):
         env = self.env
         views = Visualizer()
@@ -231,28 +258,7 @@ class PathFinder():
                 lengths = True
                 time = True
 
-        if lengths:
-            costLists = {}
-            for alg in self.algorithms.keys():
-                costLists[alg] = []
-
-        if time:
-            timeLists = {}
-            for alg in self.algorithms.keys():
-                timeLists[alg] = []
-
-        for i in range(test_samples):
-            if self.env.L * self.env.H < 100000:
-                self.env.display()
-
-            # Computation
-            for alg in self.algorithms.keys():
-                path, time = self.algorithms[alg]()
-                costLists[alg].append(path["Costs"][-1])
-                timeLists[alg].append(time)
-                print(alg + " successfully computed.")
-
-            self.setEnv(World(env.L, env.H, env.pWalls), self.diagonals)
+        costLists, timeLists = self.runAll(test_samples)
 
         if lengths:
             fig_title = "Cost Comparison"
@@ -283,3 +289,4 @@ class PathFinder():
                         views.addFigure(3, fig_title)
 
         views.show()
+        

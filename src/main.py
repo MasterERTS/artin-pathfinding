@@ -44,13 +44,9 @@ def showComparisonPlots(pathfinder, test_samples):
 
 if __name__ == "__main__":
     env = World(filename="worlds/colliders.csv")
-    _start = 25 * env.L + 100
-    _goal = 750* env.L + 370
     pathfinder_api = PathFinder(env)
-    pathfinder_api.computePathAStar()
-    pathfinder_api.plotPaths()
     #pathfinder_api.displayEnvFigure()
-    #showComparisonPlots(pathfinder_api, 20)
+    showComparisonPlots(pathfinder_api, 10)
     #computeAndDisplayDFS(pathfinder_api)
     #computeAndDisplayAStar(pathfinder_api)
     #computeAndDisplayDijkstra(pathfinder_api)
